@@ -15,6 +15,7 @@ public:
     virtual Real getValue() { return -1; }
     Real getCachedValue() {return value;}
     void update() {value = getValue();}
+    virtual void add(Real weight, Neuron* neuron){}
 
 private:
     Real value;

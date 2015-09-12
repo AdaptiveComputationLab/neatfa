@@ -7,7 +7,8 @@ add_library(iAnt_controller     MODULE iAnt_controller.h
                                        iAnt_loop_functions.cpp
                                        iAnt_pheromone.h
                                        iAnt_pheromone.cpp
-        nn/Perceptron.cpp nn/Perceptron.h nn/Neuron.cpp nn/Neuron.h nn/InputNeuron.cpp nn/InputNeuron.h nn/NeuralNetwork.cpp nn/NeuralNetwork.h)
+        nn/Perceptron.cpp nn/Perceptron.h nn/Neuron.cpp nn/Neuron.h
+        nn/NeuralNetwork.cpp nn/NeuralNetwork.h ga/Chromosome.cpp ga/Chromosome.h main.cpp nn/NeuralNetFactory.cpp nn/NeuralNetFactory.h nn/ValueNeuron.cpp nn/ValueNeuron.h)
 
 add_library(iAnt_loop_functions MODULE iAnt_loop_functions.h
                                        iAnt_loop_functions.cpp
@@ -16,7 +17,7 @@ add_library(iAnt_loop_functions MODULE iAnt_loop_functions.h
                                        iAnt_qt_user_functions.h
                                        iAnt_qt_user_functions.cpp
                                        iAnt_pheromone.h
-                                       iAnt_pheromone.cpp)
+                                       iAnt_pheromone.cpp main.cpp)
 
 ################################################################################
 # Correctly link each shared object with its dependencies . . .

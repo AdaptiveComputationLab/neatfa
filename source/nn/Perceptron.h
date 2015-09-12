@@ -7,7 +7,6 @@
 
 
 #include "Neuron.h"
-#include "InputNeuron.h"
 #include <cmath>
 #include <vector>
 
@@ -16,8 +15,8 @@ using namespace std;
 class Perceptron : public Neuron {
 
 public:
-    virtual Real getValue();
-    void add(Real weight, Neuron &neuron);
+    Real getValue();
+    void add(Real weight, Neuron* neuron);
 
 private:
     vector<Neuron*> inputs;

@@ -1,4 +1,8 @@
+#include <source/nn/NeuralNetFactory.h>
 #include "iAnt_controller.h"
+
+static CRange<Real> NN_OUTPUT_RANGE(0.0f, 1.0f);
+static CRange<Real> WHEEL_ACTUATION_RANGE(-5.0f, 5.0f);
 
 /*****
  * Initialize most basic variables and objects here. Most of the setup should be done in the Init(...) function instead
@@ -62,6 +66,23 @@ void iAnt_controller::Init(TConfigurationNode& node) {
 
     CVector2 p(GetPosition());
     startPosition = CVector3(p.GetX(), p.GetY(), 0.0);
+
+    NeuralNetFactory factory;
+
+    chromosome = new Chromosome();
+
+    for(int i = 0; i < 4 + proximitySensor->GetReadings().size(); i++){
+        for(int j = 0; j < 2; j++){
+            Chromosome::Gene *gene = new Chromosome::Gene();
+            gene->active = true;
+            gene->from = i;
+            gene->to = 4 + proximitySensor->GetReadings().size() + j + 1;
+            gene->weight = 0.5;
+            chromosome->addGene(gene);
+        }
+    }
+
+    network = factory.build(chromosome, 4 + proximitySensor->GetReadings().size(), 2);
 }
 
 /*****
@@ -70,33 +91,63 @@ void iAnt_controller::Init(TConfigurationNode& node) {
  *****/
 void iAnt_controller::ControlStep() {
 
-    /* don't run if the robot is waiting, see: SetLocalResourceDensity() */
-    if(waitTime > loopFunctions->SimTime) return;
+    //update inputs
+    network->getInputs().at(0)->setValue(compass->GetReading().Orientation.GetW());
+    network->getInputs().at(1)->setValue(compass->GetReading().Orientation.GetX());
+    network->getInputs().at(2)->setValue(compass->GetReading().Orientation.GetY());
+    network->getInputs().at(3)->setValue(compass->GetReading().Orientation.GetZ());
 
-    if(loopFunctions->SimTime % loopFunctions->DrawDensityRate == 0 && loopFunctions->DrawTargetRays == 1) {
-        /* update target ray */
-        /* TODO: make this code snippet into its own helper function... */
-        CVector3 position3d(GetPosition().GetX(), GetPosition().GetY(), 0.02);
-        CVector3 target3d(GetTarget().GetX(), GetTarget().GetY(), 0.02);
-        CRay3 targetRay(target3d, position3d);
-        loopFunctions->TargetRayList.push_back(targetRay);
+    for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
+        network->getInputs().at(i + 4)->setValue(proximitySensor->GetReadings().at(i).Value);
     }
 
-    /* CPFA "state machine" switching mechanism */
-    switch(CPFA) {
-        /* depart from nest after food drop off (or at simulation start) */
-        case DEPARTING:
-	       	departing();
-	       	break;
-        /* after departing(), once conditions are met, begin searching() */
-        case SEARCHING:
-	       	searching();
-	       	break;
-        /* return to nest after food pick up or giving up searching() */
-        case RETURNING:
-	       	returning();
-            break;
-    }
+    network->update();
+
+
+    NN_OUTPUT_RANGE.MapValueIntoRange(
+            m_fLeftSpeed,               // value to write
+            network->getOutputs().at(0)->getCachedValue(), // value to read
+            WHEEL_ACTUATION_RANGE       // target range (here [-5:5])
+    );
+    NN_OUTPUT_RANGE.MapValueIntoRange(
+            m_fRightSpeed,              // value to write
+            network->getOutputs().at(1)->getCachedValue(), // value to read
+            WHEEL_ACTUATION_RANGE       // target range (here [-5:5])
+    );
+    motorActuator->SetLinearVelocity(
+            m_fLeftSpeed,
+            m_fRightSpeed);
+
+    printf("Speed: %f, %f, %f, %f\n", network->getOutputs().at(0)->getCachedValue(), network->getOutputs().at(1)->getCachedValue(), m_fLeftSpeed, m_fRightSpeed);
+
+
+//    /* don't run if the robot is waiting, see: SetLocalResourceDensity() */
+//    if(waitTime > loopFunctions->SimTime) return;
+//
+//    if(loopFunctions->SimTime % loopFunctions->DrawDensityRate == 0 && loopFunctions->DrawTargetRays == 1) {
+//        /* update target ray */
+//        /* TODO: make this code snippet into its own helper function... */
+//        CVector3 position3d(GetPosition().GetX(), GetPosition().GetY(), 0.02);
+//        CVector3 target3d(GetTarget().GetX(), GetTarget().GetY(), 0.02);
+//        CRay3 targetRay(target3d, position3d);
+//        loopFunctions->TargetRayList.push_back(targetRay);
+//    }
+//
+//    /* CPFA "state machine" switching mechanism */
+//    switch(CPFA) {
+//        /* depart from nest after food drop off (or at simulation start) */
+//        case DEPARTING:
+//	       	departing();
+//	       	break;
+//        /* after departing(), once conditions are met, begin searching() */
+//        case SEARCHING:
+//	       	searching();
+//	       	break;
+//        /* return to nest after food pick up or giving up searching() */
+//        case RETURNING:
+//	       	returning();
+//            break;
+//    }
 }
 
 /*****

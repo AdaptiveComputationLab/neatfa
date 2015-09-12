@@ -8,6 +8,9 @@
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h>
 #include <argos3/core/utility/math/rng.h>
 #include <source/iAnt_loop_functions.h>
+#include <source/nn/Perceptron.h>
+#include <source/nn/NeuralNetwork.h>
+#include <source/ga/Chromosome.h>
 
 using namespace argos;
 using namespace std;
@@ -39,6 +42,12 @@ class iAnt_controller : public CCI_Controller {
         CVector2 GetTarget() { return targetPosition; }
 
     private:
+
+        Chromosome* chromosome;
+        NeuralNetwork* network;
+
+        Real m_fLeftSpeed;
+        Real m_fRightSpeed;
 
         /* foot-bot components: sensors and actuators */
         CCI_PositioningSensor*            compass;

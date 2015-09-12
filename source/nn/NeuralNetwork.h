@@ -7,6 +7,7 @@
 
 
 #include "Neuron.h"
+#include "ValueNeuron.h"
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
@@ -17,10 +18,16 @@ class NeuralNetwork {
 
 public:
     void update();
-    void add(Neuron &neuron);
+    void setNeurons(vector<Neuron*> inputNeurons){neurons = inputNeurons;}
+    void setOutputs(vector<Neuron*> inputOutputs){outputs = inputOutputs;}
+    vector<Neuron*> getOutputs(){ return outputs;}
+    void setInputs(vector<ValueNeuron*> inputInputs){inputs = inputInputs;}
+    vector<ValueNeuron*> getInputs(){ return inputs;}
 
 private:
     vector<Neuron*> neurons;
+    vector<ValueNeuron*> inputs;
+    vector<Neuron*> outputs;
 
 };
 
