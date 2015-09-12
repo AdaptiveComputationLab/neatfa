@@ -6,7 +6,8 @@ add_library(iAnt_controller     MODULE iAnt_controller.h
                                        iAnt_loop_functions.h
                                        iAnt_loop_functions.cpp
                                        iAnt_pheromone.h
-                                       iAnt_pheromone.cpp)
+                                       iAnt_pheromone.cpp
+        nn/Perceptron.cpp nn/Perceptron.h nn/Neuron.cpp nn/Neuron.h nn/InputNeuron.cpp nn/InputNeuron.h nn/NeuralNetwork.cpp nn/NeuralNetwork.h)
 
 add_library(iAnt_loop_functions MODULE iAnt_loop_functions.h
                                        iAnt_loop_functions.cpp
