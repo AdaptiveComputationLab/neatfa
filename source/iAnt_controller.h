@@ -91,6 +91,7 @@ class iAnt_controller : public CCI_Controller {
 
         /* CPFA helper functions */
         void SetHoldingFood();
+        bool IsNearFood();
         void SetRandomSearchLocation();
         void SetLocalResourceDensity();
         void SetFidelityList(CVector2 newFidelity);
@@ -107,6 +108,8 @@ class iAnt_controller : public CCI_Controller {
         bool     IsCollisionDetected();
         void     ApproachTheTarget();
         void     SetTargetInBounds(CVector2 newTarget);
+
+    float getRandomFloat(){return static_cast <float> (rand()) / (static_cast <float> (RAND_MAX));}
 
 };
 

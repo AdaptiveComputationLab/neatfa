@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <argos3/core/utility/string_utilities.h>
+#include <stdlib.h>
 
 using namespace std;
 using namespace argos;
@@ -25,7 +26,11 @@ public:
 
     Gene* getGene(int i) {return genes.at(i);}
     int getSize() {return genes.size();}
+    Gene* getRandomGene(){return getGene(rand() % genes.size());}
+    int getRandomNode();
     void addGene(Gene* gene){genes.push_back(gene);}
+    int getMaxFeature();
+    int getMinFeature();
 
 private:
     vector<Gene*> genes;

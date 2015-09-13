@@ -8,8 +8,6 @@
 Real Perceptron::getValue() {
     Real sum = 0;
 
-    printf("count: %i\n", inputs.size());
-
     for (unsigned long i = 0 ; i < inputs.size(); i++) {
         sum += inputs.at(i)->getCachedValue() * weights.at(i);
     }

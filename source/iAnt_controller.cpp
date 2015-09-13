@@ -1,7 +1,7 @@
 #include <source/nn/NeuralNetFactory.h>
 #include "iAnt_controller.h"
 
-static CRange<Real> NN_OUTPUT_RANGE(0.0f, 1.0f);
+static CRange<Real> NN_OUTPUT_RANGE(-1.0f, 1.0f);
 static CRange<Real> WHEEL_ACTUATION_RANGE(-5.0f, 5.0f);
 
 /*****
@@ -71,18 +71,18 @@ void iAnt_controller::Init(TConfigurationNode& node) {
 
     chromosome = new Chromosome();
 
-    for(int i = 0; i < 4 + proximitySensor->GetReadings().size(); i++){
+    for(int i = 0; i < 1 + 4 + proximitySensor->GetReadings().size() + 1 + 1; i++){
         for(int j = 0; j < 2; j++){
             Chromosome::Gene *gene = new Chromosome::Gene();
             gene->active = true;
             gene->from = i;
-            gene->to = 4 + proximitySensor->GetReadings().size() + j + 1;
-            gene->weight = 0.5;
+            gene->to = 4 + proximitySensor->GetReadings().size() + j + 1 + 1 + 1;
+            gene->weight = (2 * getRandomFloat()) - 1;
             chromosome->addGene(gene);
         }
     }
 
-    network = factory.build(chromosome, 4 + proximitySensor->GetReadings().size(), 2);
+    network = factory.build(chromosome, 4 + proximitySensor->GetReadings().size() + 1 + 1, 2);
 }
 
 /*****
@@ -97,8 +97,11 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(2)->setValue(compass->GetReading().Orientation.GetY());
     network->getInputs().at(3)->setValue(compass->GetReading().Orientation.GetZ());
 
+    network->getInputs().at(4)->setValue(isHoldingFood? 1 : 0);
+    network->getInputs().at(5)->setValue(IsNearFood()? 1 : 0);
+
     for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
-        network->getInputs().at(i + 4)->setValue(proximitySensor->GetReadings().at(i).Value);
+        network->getInputs().at(i + 5)->setValue(proximitySensor->GetReadings().at(i).Value);
     }
 
     network->update();
@@ -118,7 +121,7 @@ void iAnt_controller::ControlStep() {
             m_fLeftSpeed,
             m_fRightSpeed);
 
-    printf("Speed: %f, %f, %f, %f\n", network->getOutputs().at(0)->getCachedValue(), network->getOutputs().at(1)->getCachedValue(), m_fLeftSpeed, m_fRightSpeed);
+    SetHoldingFood();
 
 
 //    /* don't run if the robot is waiting, see: SetLocalResourceDensity() */
@@ -227,7 +230,7 @@ void iAnt_controller::searching() {
     }
 
     /* When not carrying food, calculate movement. */
-    if(IsHoldingFood() == false) {
+    if(!IsHoldingFood()) {
         CVector2 distance = GetPosition() - targetPosition;
         Real     random   = RNG->Uniform(CRange<Real>(0.0, 1.0));
 
@@ -242,7 +245,7 @@ void iAnt_controller::searching() {
            we are currently using informed or uninformed search. */
         else if(distance.SquareLength() < distanceTolerance) {
             /* uninformed search */
-            if(isInformed == false) {
+            if(!isInformed) {
                 Real USCV = loopFunctions->UninformedSearchVariation.GetValue();
                 Real rand = RNG->Gaussian(USCV);
                 CRadians rotation(rand);
@@ -254,7 +257,7 @@ void iAnt_controller::searching() {
                 SetTargetInBounds(turn_vector + GetPosition());
 			}
             /* informed search */
-            else if(isInformed == true) {
+            else if(isInformed) {
                 size_t   t           = searchTime++;
                 Real     twoPi       = (CRadians::TWO_PI).GetValue();
                 Real     pi          = (CRadians::PI).GetValue();
@@ -304,7 +307,7 @@ void iAnt_controller::returning() {
         Real r2 = RNG->Uniform(CRange<Real>(0.0, 1.0));
 
 		if(poissonCDF_pLayRate > r1) {
-            if(isGivingUpSearch == false) {
+            if(!isGivingUpSearch) {
                 trailToShare.push_back(loopFunctions->NestPosition);
                 Real timeInSeconds = (Real)(loopFunctions->SimTime / loopFunctions->TicksPerSecond);
                 iAnt_pheromone sharedPheromone(fidelityPosition, trailToShare, timeInSeconds, loopFunctions->RateOfPheromoneDecay);
@@ -320,23 +323,39 @@ void iAnt_controller::returning() {
            trails, or random search. */
 
         /* use site fidelity */
-		if((isUsingSiteFidelity == true) && (poissonCDF_sFollowRate > r2)) {
-			SetTargetInBounds(fidelityPosition);
-			isInformed = true;
-		}
-        /* use pheromone waypoints */
-        else if(SetTargetPheromone() == true) {
-            SetFidelityList();
-			isInformed = true;
-            isUsingSiteFidelity = false;
-		}
-        /* use random search */
+        if (isUsingSiteFidelity) {
+            if (poissonCDF_sFollowRate > r2) {
+                SetTargetInBounds(fidelityPosition);
+                isInformed = true;
+            }
+                /* use pheromone waypoints */
+            else if (SetTargetPheromone()) {
+                SetFidelityList();
+                isInformed = true;
+                isUsingSiteFidelity = false;
+            }
+                /* use random search */
+            else {
+                SetRandomSearchLocation();
+                isInformed = false;
+                SetFidelityList();
+                isUsingSiteFidelity = false;
+            }
+        }
         else {
-			SetRandomSearchLocation();
-			isInformed = false;
-            SetFidelityList();
-            isUsingSiteFidelity = false;
-		}
+            if (SetTargetPheromone()) {
+                SetFidelityList();
+                isInformed = true;
+                isUsingSiteFidelity = false;
+            }
+                /* use random search */
+            else {
+                SetRandomSearchLocation();
+                isInformed = false;
+                SetFidelityList();
+                isUsingSiteFidelity = false;
+            }
+        }
 
 		CPFA = DEPARTING;
 	}
@@ -353,7 +372,7 @@ void iAnt_controller::returning() {
 void iAnt_controller::SetHoldingFood() {
 
     /* Is the iAnt already holding food? */
-    if(IsHoldingFood() == false) {
+    if(!IsHoldingFood()) {
 
         /* No, the iAnt isn't holding food. Check if we have found food at our
            current position and update the food list if we have. */
@@ -382,7 +401,7 @@ void iAnt_controller::SetHoldingFood() {
         }
 
         /* We picked up food. Update the food list minus what we picked up. */
-        if(IsHoldingFood() == true) {
+        if(IsHoldingFood()) {
             loopFunctions->FoodList = newFoodList;
             SetLocalResourceDensity();
         }
@@ -396,9 +415,18 @@ void iAnt_controller::SetHoldingFood() {
 
     /* We are carrying food and haven't reached the nest, keep building up the
        pheromone trail attached to this found food item. */
-    if(IsHoldingFood() == true && loopFunctions->SimTime % loopFunctions->DrawDensityRate == 0) {
+    if(IsHoldingFood() && loopFunctions->SimTime % loopFunctions->DrawDensityRate == 0) {
         trailToShare.push_back(GetPosition());
     }
+}
+
+bool iAnt_controller::IsNearFood() {
+    for(int i = 0; i < loopFunctions->FoodList.size(); i++) {
+        if ((GetPosition() - loopFunctions->FoodList[i]).SquareLength() < loopFunctions->FoodRadiusSquared) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /*****
@@ -448,7 +476,7 @@ void iAnt_controller::SetRandomSearchLocation() {
         newY = y_max;
     }
     /* if set_y_max = true: guarantee newY is at plus or minus y-axis edge */
-    else if(set_y_max == true) {
+    else if(set_y_max) {
         if(RNG->Uniform(CRange<Real>(0.0, 1.0)) < 0.5) newY = y_min;
         else newY = y_max;
     }
@@ -555,7 +583,7 @@ bool iAnt_controller::SetTargetPheromone() {
 
     /* Calculate a maximum strength based on active pheromone weights. */
 	for(size_t i = 0; i < loopFunctions->PheromoneList.size(); i++) {
-        if(loopFunctions->PheromoneList[i].IsActive() == true) {
+        if(loopFunctions->PheromoneList[i].IsActive()) {
             maxStrength += loopFunctions->PheromoneList[i].GetWeight();
         }
     }
@@ -702,7 +730,7 @@ bool iAnt_controller::IsCollisionDetected() {
 		}
 	}
 
-	return (collisionsDetected > 0) ? (true) : (false);
+	return collisionsDetected > 0;
 }
 
 /*****
@@ -786,7 +814,7 @@ void iAnt_controller::ApproachTheTarget() {
     /* heading = angle1 - angle2 = 0.0 when the robot is facing its target */
 	CRadians heading = (angle1 - angle2).SignedNormalize();
 
-	if(IsCollisionDetected() == true) {
+	if(IsCollisionDetected()) {
 	   collisionDelay = loopFunctions->SimTime + (loopFunctions->TicksPerSecond * 2);
 
        /* turn left */
