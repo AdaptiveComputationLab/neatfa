@@ -1,7 +1,7 @@
 ################################################################################
 # Compile each iAnt-ARGoS class into a shared object file.
 ################################################################################
-add_library(iAnt_controller     MODULE iAnt_controller.h
+add_library(iAnt_controller     SHARED iAnt_controller.h
                                     iAnt_controller.cpp
                                     iAnt_loop_functions.h
                                     iAnt_loop_functions.cpp
@@ -22,9 +22,11 @@ add_library(iAnt_controller     MODULE iAnt_controller.h
                                     ga/BasicGA.cpp
                                     ga/BasicGA.h
                                     ga/Unique.cpp
-                                    ga/Unique.h)
+                                    ga/Unique.h
+                                    ga/ChromosomeFactory.cpp
+                                    ga/ChromosomeFactory.h)
 
-add_library(iAnt_loop_functions MODULE iAnt_loop_functions.h
+add_library(iAnt_loop_functions SHARED iAnt_loop_functions.h
                                     iAnt_loop_functions.cpp
                                     iAnt_controller.h
                                     iAnt_controller.cpp
@@ -49,3 +51,14 @@ target_link_libraries(iAnt_loop_functions
                       argos3plugin_simulator_footbot
                       argos3plugin_simulator_genericrobot
                       argos3plugin_simulator_qtopengl)
+
+add_executable(iant_main main.cpp)
+
+target_link_libraries(iant_main
+        iAnt_controller
+        iAnt_loop_functions
+        argos3core_simulator
+        argos3plugin_simulator_entities
+        argos3plugin_simulator_footbot
+        argos3plugin_simulator_genericrobot)
+

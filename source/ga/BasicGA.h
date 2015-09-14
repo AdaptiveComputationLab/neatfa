@@ -14,6 +14,10 @@ public:
     struct FitnessChromosome{
         Real fitness;
         Chromosome* chromosome;
+
+        bool operator<( const FitnessChromosome& that ) const {
+            return fitness > that.fitness;
+        }
     };
 
     vector<Chromosome*> evolve(vector<FitnessChromosome> input);
@@ -29,6 +33,7 @@ private:
     vector<BasicGA::FitnessChromosome> rouletteSelection(vector<BasicGA::FitnessChromosome> vector, int size);
     vector<Chromosome*> crossOver(vector<BasicGA::FitnessChromosome> input, int populationSize);
     vector<Chromosome*> mutation(vector<Chromosome*> input);
+    vector<Chromosome*> elitism(vector<Chromosome*> someChromosomes, vector<BasicGA::FitnessChromosome> fitnessChromosomes);
     Chromosome::Gene *copy(Chromosome::Gene *input);
     float getRandomFloat(){return static_cast <float> (rand()) / (static_cast <float> (RAND_MAX));}
 };

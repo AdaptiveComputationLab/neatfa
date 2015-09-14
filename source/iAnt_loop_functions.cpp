@@ -86,6 +86,12 @@ void iAnt_loop_functions::Init(TConfigurationNode& node) {
     GetNodeAttribute(cluster,  "ClusterLengthY",                    ClusterLengthY);
     GetNodeAttribute(powerLaw, "PowerRank",                         PowerRank);
 
+//    string chromosomeString;
+//
+//    GetNodeAttribute(simNode, "Chromosome",                         chromosomeString);
+//
+//    loadChromosome(chromosomeString);
+
     /* Convert and calculate additional values. */
     TicksPerSecond            = physicsEngine->GetInverseSimulationClockTick();
     RandomSeed                = simulator->GetRandomSeed();
@@ -165,22 +171,24 @@ void iAnt_loop_functions::PostExperiment() {
 
         // output to file
         if(dataOutput.tellp() == 0) {
-            dataOutput << "tags_collected, time_in_minutes, random_seed\n";
+           //dataOutput << "tags_collected, time_in_minutes, random_seed\n";
         }
 
-        dataOutput << collectedFood << ", ";
+        dataOutput << "[" << getFitness() << "], ";
         dataOutput << time_in_minutes << ", " << RandomSeed << endl;
         dataOutput.close();
     }
 
     // output to ARGoS GUI
     if(SimCounter == 0) {
-        LOG << "\ntags_collected, time_in_minutes, random_seed\n";
-        LOG << collectedFood << ", ";
-        LOG << time_in_minutes << ", " << RandomSeed << endl;
+        //LOG << "\ntags_collected, time_in_minutes, random_seed\n";
+        LOG << "[" << getFitness() << "], ";
+        LOG << time_in_minutes << ", " << RandomSeed << ", " << endl;
+        //outputChromosome();
     } else {
-        LOG << collectedFood << ", ";
-        LOG << time_in_minutes << ", " << RandomSeed << endl;
+        LOG << "[" << getFitness() << "], ";
+        LOG << time_in_minutes << ", " << RandomSeed << ", "  << endl;
+        //outputChromosome();
     }
 
     SimCounter++;
@@ -204,6 +212,7 @@ void iAnt_loop_functions::Reset() {
     FidelityList.clear();
     TargetRayList.clear();
     SetFoodDistribution();
+    foodReturned = 0;
 
     CSpace::TMapPerType& footbots = GetSpace().GetEntitiesByType("foot-bot");
     CSpace::TMapPerType::iterator it;
@@ -478,3 +487,78 @@ bool iAnt_loop_functions::IsCollidingWithFood(CVector2 p) {
 }
 
 REGISTER_LOOP_FUNCTIONS(iAnt_loop_functions, "iAnt_loop_functions");
+
+void iAnt_loop_functions::loadChromosome(string input) {
+
+    cout << "Loading Chromosome " << input << endl;
+
+    chromosome = new Chromosome();
+
+    vector<string> chromosomeTokens;
+    Tokenize(input, chromosomeTokens, ";");
+
+    for(int i = 0; i < chromosomeTokens.size(); i++) {
+        vector<string> geneTokens;
+        Tokenize(chromosomeTokens.at(i), geneTokens, ",");
+
+        if (geneTokens.size() >= 5) {
+
+            Chromosome::Gene *gene = new Chromosome::Gene();
+
+            gene->feature = atoi(geneTokens.at(0).c_str());
+            gene->active = geneTokens.at(1) == "1";
+            gene->from = atoi(geneTokens.at(2).c_str());
+            gene->to = atoi(geneTokens.at(3).c_str());
+            gene->weight = atof(geneTokens.at(4).c_str());
+
+            chromosome->addGene(gene);
+        }
+    }
+
+    cout << "Finished";
+}
+
+void iAnt_loop_functions::Tokenize(const string& str, vector<string>& tokens, const string& delimiters)
+{
+    // Skip delimiters at beginning.
+    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+    // Find first "non-delimiter".
+    string::size_type pos     = str.find_first_of(delimiters, lastPos);
+
+    while (string::npos != pos || string::npos != lastPos)
+    {
+        // Found a token, add it to the vector.
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        // Skip delimiters.  Note the "not_of"
+        lastPos = str.find_first_not_of(delimiters, pos);
+        // Find next "non-delimiter"
+        pos = str.find_first_of(delimiters, lastPos);
+    }
+}
+
+void iAnt_loop_functions::outputChromosome(){
+    for(int i = 0; i < chromosome->getSize(); i++){
+        Chromosome::Gene * gene = chromosome->getGene(i);
+        LOG << gene->feature;
+        LOG << ",";
+        LOG << gene->active;
+        LOG << ",";
+        LOG << gene->from;
+        LOG << ",";
+        LOG << gene->to;
+        LOG << ",";
+        LOG << gene->weight;
+        LOG << ";";
+    }
+    LOG << endl;
+}
+
+Real iAnt_loop_functions::getFitness() {
+    Real fitness = 0;
+
+    fitness += FoodItemCount - FoodList.size();
+    fitness += 10 * foodReturned;
+
+
+    return fitness;
+}

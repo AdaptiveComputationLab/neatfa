@@ -41,21 +41,23 @@ NeuralNetwork* NeuralNetFactory::build(Chromosome *chromosome,
 
     for(int i = 0; i < chromosome->getSize(); i++){
         Chromosome::Gene *gene = chromosome->getGene(i);
-        if(neuronMap.find(gene->from) == neuronMap.end()){
-            Perceptron* p = new Perceptron();
-            neuronMap.insert(make_pair(gene->from, p));
-            neurons.push_back(p);
-        }
-        if(neuronMap.find(gene->to) == neuronMap.end()){
-            Perceptron* p = new Perceptron();
-            neuronMap.insert(make_pair(gene->to, p));
-            neurons.push_back(p);
-        }
-
         if(gene->active){
-            Neuron* targetNeuron = neuronMap.at(gene->to);
-            Neuron* sourceNeuron = neuronMap.at(gene->from);
-            targetNeuron->add(gene->weight, sourceNeuron);
+            if(neuronMap.find(gene->from) == neuronMap.end()){
+                Perceptron* p = new Perceptron();
+                neuronMap.insert(make_pair(gene->from, p));
+                neurons.push_back(p);
+            }
+            if(neuronMap.find(gene->to) == neuronMap.end()){
+                Perceptron* p = new Perceptron();
+                neuronMap.insert(make_pair(gene->to, p));
+                neurons.push_back(p);
+            }
+
+            if(gene->active){
+                Neuron* targetNeuron = neuronMap.at(gene->to);
+                Neuron* sourceNeuron = neuronMap.at(gene->from);
+                targetNeuron->add(gene->weight, sourceNeuron);
+            }
         }
     }
 

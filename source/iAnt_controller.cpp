@@ -1,4 +1,6 @@
 #include <source/nn/NeuralNetFactory.h>
+#include <source/ga/Unique.h>
+#include <source/ga/ChromosomeFactory.h>
 #include "iAnt_controller.h"
 
 static CRange<Real> NN_OUTPUT_RANGE(-1.0f, 1.0f);
@@ -66,23 +68,6 @@ void iAnt_controller::Init(TConfigurationNode& node) {
 
     CVector2 p(GetPosition());
     startPosition = CVector3(p.GetX(), p.GetY(), 0.0);
-
-    NeuralNetFactory factory;
-
-    chromosome = new Chromosome();
-
-    for(int i = 0; i < 1 + 4 + proximitySensor->GetReadings().size() + 1 + 1; i++){
-        for(int j = 0; j < 2; j++){
-            Chromosome::Gene *gene = new Chromosome::Gene();
-            gene->active = true;
-            gene->from = i;
-            gene->to = 4 + proximitySensor->GetReadings().size() + j + 1 + 1 + 1;
-            gene->weight = (2 * getRandomFloat()) - 1;
-            chromosome->addGene(gene);
-        }
-    }
-
-    network = factory.build(chromosome, 4 + proximitySensor->GetReadings().size() + 1 + 1, 2);
 }
 
 /*****
@@ -90,6 +75,12 @@ void iAnt_controller::Init(TConfigurationNode& node) {
  * enumeration flag once per frame.
  *****/
 void iAnt_controller::ControlStep() {
+
+    if(!networkInitalized){
+        NeuralNetFactory factory;
+        network = factory.build(loopFunctions->chromosome, ChromosomeFactory::INPUT_COUNT, ChromosomeFactory::OUTPUT_COUNT);
+        networkInitalized = true;
+    }
 
     //update inputs
     network->getInputs().at(0)->setValue(compass->GetReading().Orientation.GetW());
@@ -158,6 +149,7 @@ void iAnt_controller::ControlStep() {
  * start of a simulation.
  *****/
 void iAnt_controller::Reset() {
+
 
     /* Reset all local variables. */
     isHoldingFood       = false;
@@ -411,6 +403,7 @@ void iAnt_controller::SetHoldingFood() {
     /* Drop off food: We are holding food and have reached the nest. */
     else if((GetPosition() - loopFunctions->NestPosition).SquareLength() < loopFunctions->NestRadiusSquared) {
         isHoldingFood = false;
+        loopFunctions->foodReturned++;
     }
 
     /* We are carrying food and haven't reached the nest, keep building up the

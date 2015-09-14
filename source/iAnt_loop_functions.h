@@ -39,11 +39,17 @@ class iAnt_loop_functions : public CLoopFunctions {
         bool IsExperimentFinished();
 		CColor GetFloorColor(const CVector2& p) { return CColor::WHITE; }
 
+        void setChromosome(Chromosome* chromosomeInput){chromosome = chromosomeInput;}
+        Chromosome* getChromosome(){return chromosome;}
+        Real getFitness();
+
         /* public helper functions */
         void UpdatePheromoneList();
         void SetFoodDistribution();
 
 	protected:
+
+    int foodReturned;
 
         /* iAnt simulation data */
         size_t SimTime;
@@ -97,6 +103,7 @@ class iAnt_loop_functions : public CLoopFunctions {
 
     private:
 
+        Chromosome* chromosome;
         CRandom::CRNG* RNG;
 
         /* private helper functions */
@@ -106,6 +113,10 @@ class iAnt_loop_functions : public CLoopFunctions {
         bool IsOutOfBounds(CVector2 p, size_t length, size_t width);
         bool IsCollidingWithNest(CVector2 p);
         bool IsCollidingWithFood(CVector2 p);
+    void outputChromosome();
+
+    void loadChromosome(string basic_string);
+    void Tokenize(const string& str, vector<string>& tokens, const string& delimiters);
 };
 
 #endif /* IANT_LOOP_FUNCTIONS_H_ */

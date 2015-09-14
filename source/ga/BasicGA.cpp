@@ -3,6 +3,8 @@
 //
 
 #include <stdlib.h>
+#include <algorithm>
+#include <stdio.h>
 #include "BasicGA.h"
 #include "Unique.h"
 
@@ -21,9 +23,17 @@ vector<Chromosome *> BasicGA::evolve(vector<BasicGA::FitnessChromosome> input) {
 
     //elitism
     // copy sorted chromosomes after crossover and mutation
-    //return elitism(mutatedChromosomes, sort(fitnessMap));
+    vector<BasicGA::FitnessChromosome> sorted;
+    sorted.assign(input.begin(), input.end());
+    sort(sorted.begin(), sorted.end());
+    return elitism(mutatedChromosomes, sorted);
 
-    return mutatedChromosomes;
+    /*vector<Chromosome*> chromosomes;
+    for(int i = 0; i < input.size(); i++){
+        chromosomes.push_back(input.at(i).chromosome);
+    }
+
+    return chromosomes;*/
 }
 
 vector<BasicGA::FitnessChromosome> BasicGA::rouletteSelection(vector<BasicGA::FitnessChromosome> input, int populationSize) {
@@ -79,8 +89,8 @@ vector<Chromosome*> BasicGA::crossOver(vector<BasicGA::FitnessChromosome> input,
 
         //randomly choose parent chromosome feature to incorporate.
         for(int f = minFeature; f <= maxFeature; f++){
-            Chromosome::Gene* gene1 = candidate1.chromosome->getGene(f);
-            Chromosome::Gene* gene2 = candidate2.chromosome->getGene(f);
+            Chromosome::Gene* gene1 = candidate1.chromosome->getGeneByFeature(f);
+            Chromosome::Gene* gene2 = candidate2.chromosome->getGeneByFeature(f);
 
             if(rand() % 2 == 0){
                 if(gene1 != NULL){
@@ -99,18 +109,38 @@ vector<Chromosome*> BasicGA::crossOver(vector<BasicGA::FitnessChromosome> input,
     return outputChromosomes;
 }
 
+vector<Chromosome*> BasicGA::elitism(vector<Chromosome*> someChromosomes, vector<BasicGA::FitnessChromosome> fitnessChromosomes) {
+    vector<Chromosome*> elite;
+    int eliteCandidateSize = someChromosomes.size() * ELITE_PERCENTAGE;
+    for (int i = 0; i < someChromosomes.size(); i++) {
+        if (i > eliteCandidateSize) {
+            elite.push_back(someChromosomes.at(i));
+        } else {
+            cout << "KEEPING: ";
+            cout << fitnessChromosomes.at(i).fitness;
+            cout << endl;
+            elite.push_back(fitnessChromosomes.at(i).chromosome);
+
+        }
+    }
+
+    return elite;
+}
+
 vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
     // weight mutation
-    for(int i = 0; i < input.size(); i++){
-        Chromosome* candidate = input.at(i);
+    for(int i = 0; i < 10 * input.size(); i++){
+        Chromosome* candidate = input.at(i % input.size());
 
         if (getRandomFloat() <= WEIGHT_MUTATION_PERCENTAGE) {
+            cout << "WEIGHT MUTATION\n";
             Chromosome::Gene* genCandidate = candidate->getRandomGene();
             genCandidate->weight = genCandidate->weight + (getRandomFloat() - 0.5f);
         }
 
         //edge add mutation
         if (getRandomFloat() <= EDGE_ADD_MUTATION_PERCENTAGE) {
+            cout << "EDGE MUTATION\n";
             int edgesToAdd = rand() % 100;
             for(int k = 0; k < edgesToAdd; k++){
                 int startNode = candidate->getRandomNode();
@@ -143,14 +173,16 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
 
         //edge remove mutation
         if (getRandomFloat() <= EDGE_REMOVE_MUTATION_PERCENTAGE) {
-            int edgesToRemove = rand() % 20;
+            int edgesToRemove = rand() % 3;
+            cout << "REMOVING RANDOM EDGES (" << edgesToRemove << ")\n";
             for(int m = 0; m < edgesToRemove; m++){
-                //candidate->getGene(m)getGenes().remove(candidate->getRandomGene());
+                candidate->removeRandomGene();
             }
         }
 
         //node add mutation
         if (getRandomFloat() <= NODE_ADD_MUTATION_PERCENTAGE) {
+            cout << "NODE ADD MUTATION\n";
             int nodesToAdd = rand() % 5;
             for(int n = 0; n < nodesToAdd && candidate->getSize() < TOTAL_NODE_COUNT; n++){
                 Chromosome::Gene* splitEdge = candidate->getRandomGene();
@@ -190,5 +222,6 @@ Chromosome::Gene* BasicGA::copy(Chromosome::Gene* input){
     gene->from = input->from;
     gene->to = input->to;
     gene->weight = input->weight;
-}
 
+    return gene;
+}

@@ -6,6 +6,7 @@
 #define IANT_ARGOS_CHROMOSOME_H
 
 #include <vector>
+#include <set>
 #include <argos3/core/utility/string_utilities.h>
 #include <stdlib.h>
 
@@ -24,16 +25,21 @@ public:
         bool active;
     };
 
-    Gene* getGene(int i) {return genes.at(i);}
+    Gene* getGene(int i){return genes.at(i);}
+    Gene* getGeneByFeature(int feature);
     int getSize() {return genes.size();}
     Gene* getRandomGene(){return getGene(rand() % genes.size());}
     int getRandomNode();
-    void addGene(Gene* gene){genes.push_back(gene);}
+    void addGene(Gene* gene);
     int getMaxFeature();
     int getMinFeature();
 
+    void removeRandomGene();
+
 private:
     vector<Gene*> genes;
+    set<int> nodes;
+    int id;
 };
 
 

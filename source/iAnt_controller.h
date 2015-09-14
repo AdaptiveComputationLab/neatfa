@@ -45,6 +45,7 @@ class iAnt_controller : public CCI_Controller {
 
         Chromosome* chromosome;
         NeuralNetwork* network;
+        bool networkInitalized;
 
         Real m_fLeftSpeed;
         Real m_fRightSpeed;
