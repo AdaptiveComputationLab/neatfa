@@ -23,6 +23,7 @@ public:
 
 private:
     float getRandomFloat(){return static_cast <float> (rand()) / (static_cast <float> (RAND_MAX));}
+    Chromosome::Gene *copy(Chromosome::Gene *input);
 };
 
 

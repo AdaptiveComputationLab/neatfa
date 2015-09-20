@@ -25,9 +25,9 @@ public:
 private:
     static const int TOTAL_NODE_COUNT = 30;
     static const float ELITE_PERCENTAGE = 0.30F;
-    static const float WEIGHT_MUTATION_PERCENTAGE = 0.20F;
-    static const float EDGE_ADD_MUTATION_PERCENTAGE = 0.20F;
-    static const float EDGE_REMOVE_MUTATION_PERCENTAGE = 0.10F;
+    static const float WEIGHT_MUTATION_PERCENTAGE = 1.0F;
+    static const float EDGE_ADD_MUTATION_PERCENTAGE = 0.10F;
+    static const float EDGE_REMOVE_MUTATION_PERCENTAGE = 0.05F;
     static const float NODE_ADD_MUTATION_PERCENTAGE = 0.10F;
 
     vector<BasicGA::FitnessChromosome> rouletteSelection(vector<BasicGA::FitnessChromosome> vector, int size);

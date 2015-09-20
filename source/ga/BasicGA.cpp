@@ -113,7 +113,7 @@ vector<Chromosome*> BasicGA::elitism(vector<Chromosome*> someChromosomes, vector
     vector<Chromosome*> elite;
     int eliteCandidateSize = someChromosomes.size() * ELITE_PERCENTAGE;
     for (int i = 0; i < someChromosomes.size(); i++) {
-        if (i > eliteCandidateSize) {
+        if (i > eliteCandidateSize || fitnessChromosomes.at(i).fitness == 0) {
             elite.push_back(someChromosomes.at(i));
         } else {
             cout << "KEEPING: ";
@@ -129,13 +129,13 @@ vector<Chromosome*> BasicGA::elitism(vector<Chromosome*> someChromosomes, vector
 
 vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
     // weight mutation
-    for(int i = 0; i < 10 * input.size(); i++){
+    for(int i = 0; i < 3 * input.size(); i++){
         Chromosome* candidate = input.at(i % input.size());
 
         if (getRandomFloat() <= WEIGHT_MUTATION_PERCENTAGE) {
             cout << "WEIGHT MUTATION\n";
             Chromosome::Gene* genCandidate = candidate->getRandomGene();
-            genCandidate->weight = genCandidate->weight + (getRandomFloat() - 0.5f);
+            genCandidate->weight = genCandidate->weight + (4 * (getRandomFloat() - 0.5f));
         }
 
         //edge add mutation
@@ -176,7 +176,8 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
             int edgesToRemove = rand() % 3;
             cout << "REMOVING RANDOM EDGES (" << edgesToRemove << ")\n";
             for(int m = 0; m < edgesToRemove; m++){
-                candidate->removeRandomGene();
+                Chromosome::Gene* genCandidate = candidate->getRandomGene();
+                genCandidate->weight = 0;
             }
         }
 

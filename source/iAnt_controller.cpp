@@ -3,7 +3,7 @@
 #include <source/ga/ChromosomeFactory.h>
 #include "iAnt_controller.h"
 
-static CRange<Real> NN_OUTPUT_RANGE(-1.0f, 1.0f);
+static CRange<Real> NN_OUTPUT_RANGE(0.0f, 1.0f);
 static CRange<Real> WHEEL_ACTUATION_RANGE(-5.0f, 5.0f);
 
 /*****
@@ -149,6 +149,8 @@ void iAnt_controller::ControlStep() {
  * start of a simulation.
  *****/
 void iAnt_controller::Reset() {
+    NeuralNetFactory factory;
+    network = factory.build(loopFunctions->chromosome, ChromosomeFactory::INPUT_COUNT, ChromosomeFactory::OUTPUT_COUNT);
 
 
     /* Reset all local variables. */
