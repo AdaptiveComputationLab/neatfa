@@ -86,11 +86,11 @@ void iAnt_loop_functions::Init(TConfigurationNode& node) {
     GetNodeAttribute(cluster,  "ClusterLengthY",                    ClusterLengthY);
     GetNodeAttribute(powerLaw, "PowerRank",                         PowerRank);
 
-//    string chromosomeString;
-//
-//    GetNodeAttribute(simNode, "Chromosome",                         chromosomeString);
-//
-//    loadChromosome(chromosomeString);
+    string chromosomeString;
+
+    GetNodeAttribute(simNode, "Chromosome",                         chromosomeString);
+
+    loadChromosome(chromosomeString);
 
     /* Convert and calculate additional values. */
     TicksPerSecond            = physicsEngine->GetInverseSimulationClockTick();
