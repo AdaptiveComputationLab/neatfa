@@ -34,10 +34,10 @@ int main(int argc, char** argv) {
         int fitsum = 0;
 
         for (int c = 0; c < chromosomes.size(); c++) {
+            cLoopFunctions.setChromosome(chromosomes.at(c));
 	        cSimulator.Reset();
             cSimulator.Execute();
 
-            cLoopFunctions.setChromosome(chromosomes.at(c));
 
             BasicGA::FitnessChromosome fitChromosome;
             fitChromosome.chromosome = chromosomes.at(c);
