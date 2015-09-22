@@ -35,6 +35,9 @@ void Chromosome::addGene(Chromosome::Gene *gene) {
 int Chromosome::getRandomNode() {
     set<int>::const_iterator it(nodes.begin());
     advance(it, rand() % nodes.size());
+
+    /* todo, fix this */
+    return 0;
 }
 
 Chromosome::Gene *Chromosome::getGeneByFeature(int feature) {

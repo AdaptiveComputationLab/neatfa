@@ -15,16 +15,17 @@
 
 int main(int argc, char** argv) {
 
-    argos::CSimulator& cSimulator = argos::CSimulator::GetInstance();
+    static argos::CSimulator& cSimulator = argos::CSimulator::GetInstance();
+
     cSimulator.SetExperimentFileName("experiments/iAnt.xml");
     cSimulator.LoadExperiment();
 
+   static iAnt_loop_functions &cLoopFunctions = static_cast<iAnt_loop_functions&>(cSimulator.GetLoopFunctions());
     BasicGA ga;
     ChromosomeFactory chromosomeFactory;
     vector<Chromosome*> chromosomes = chromosomeFactory.buildPopulation(10);
 
     for(int i = 0; i < 100; i++) {
-
         argos::LOG << "Generation #";
         argos::LOG << i;
         argos::LOG << " started.\n";
@@ -33,12 +34,10 @@ int main(int argc, char** argv) {
         int fitsum = 0;
 
         for (int c = 0; c < chromosomes.size(); c++) {
-
-            static iAnt_loop_functions &cLoopFunctions = dynamic_cast<iAnt_loop_functions &>(cSimulator.GetLoopFunctions());
-            cLoopFunctions.setChromosome(chromosomes.at(c));
-            cSimulator.Reset();
-
+	        cSimulator.Reset();
             cSimulator.Execute();
+
+            cLoopFunctions.setChromosome(chromosomes.at(c));
 
             BasicGA::FitnessChromosome fitChromosome;
             fitChromosome.chromosome = chromosomes.at(c);

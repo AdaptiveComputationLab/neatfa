@@ -29,3 +29,5 @@ link_directories(${ARGOS_LIBRARY_DIRS})
 
 # Descend into the source code directory.
 add_subdirectory(source)
+
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
