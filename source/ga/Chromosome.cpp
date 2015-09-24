@@ -36,8 +36,7 @@ int Chromosome::getRandomNode() {
     set<int>::const_iterator it(nodes.begin());
     advance(it, rand() % nodes.size());
 
-    /* todo, fix this */
-    return 0;
+    return *it;
 }
 
 Chromosome::Gene *Chromosome::getGeneByFeature(int feature) {
