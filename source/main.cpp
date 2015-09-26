@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     cSimulator.SetExperimentFileName("experiments/iAnt.xml");
     cSimulator.LoadExperiment();
 
-   static iAnt_loop_functions &cLoopFunctions = static_cast<iAnt_loop_functions&>(cSimulator.GetLoopFunctions());
+    iAnt_loop_functions &cLoopFunctions = (iAnt_loop_functions&)(cSimulator.GetLoopFunctions());
     BasicGA ga;
     ChromosomeFactory chromosomeFactory;
     vector<Chromosome*> chromosomes = chromosomeFactory.buildPopulation(10);
