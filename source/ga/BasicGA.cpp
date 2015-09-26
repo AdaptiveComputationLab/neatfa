@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 #include <algorithm>
-#include <stdio.h>
 #include "BasicGA.h"
 #include "Unique.h"
 
@@ -129,7 +128,7 @@ vector<Chromosome*> BasicGA::elitism(vector<Chromosome*> someChromosomes, vector
 
 vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
     // weight mutation
-    for(int i = 0; i < 3 * input.size(); i++){
+    for(int i = 0; i < input.size(); i++){
         Chromosome* candidate = input.at(i % input.size());
 
         if (getRandomFloat() <= WEIGHT_MUTATION_PERCENTAGE) {
@@ -141,7 +140,7 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
         //edge add mutation
         if (getRandomFloat() <= EDGE_ADD_MUTATION_PERCENTAGE) {
             cout << "EDGE MUTATION\n";
-            int edgesToAdd = rand() % 100;
+            int edgesToAdd = 1;
             for(int k = 0; k < edgesToAdd; k++){
                 int startNode = candidate->getRandomNode();
                 int endNode = candidate->getRandomNode();
@@ -173,7 +172,7 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
 
         //edge remove mutation
         if (getRandomFloat() <= EDGE_REMOVE_MUTATION_PERCENTAGE) {
-            int edgesToRemove = rand() % 3;
+            int edgesToRemove = 1;
             cout << "REMOVING RANDOM EDGES (" << edgesToRemove << ")\n";
             for(int m = 0; m < edgesToRemove; m++){
                 Chromosome::Gene* genCandidate = candidate->getRandomGene();
@@ -184,7 +183,7 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
         //node add mutation
         if (getRandomFloat() <= NODE_ADD_MUTATION_PERCENTAGE) {
             cout << "NODE ADD MUTATION\n";
-            int nodesToAdd = rand() % 5;
+            int nodesToAdd = 1;
             for(int n = 0; n < nodesToAdd && candidate->getSize() < TOTAL_NODE_COUNT; n++){
                 Chromosome::Gene* splitEdge = candidate->getRandomGene();
                 if(splitEdge->active){
@@ -195,14 +194,14 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
                     one->feature = Unique::getInstance().getFeatureId();
                     one->from = splitEdge->from;
                     one->to = new_node;
-                    one->weight = getRandomFloat();
+                    one->weight = splitEdge->weight;
 
                     Chromosome::Gene* two = new Chromosome::Gene();
                     two->active = true;
                     two->feature = Unique::getInstance().getFeatureId();
                     two->from = new_node;
                     two->to = splitEdge->to;
-                    two->weight = getRandomFloat();
+                    two->weight = splitEdge->weight;
 
                     candidate->addGene(one);
                     candidate->addGene(two);

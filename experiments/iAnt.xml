@@ -55,8 +55,8 @@
                     RateOfPheromoneDecay              = "0.03821808844804764"/>
 
         <!-- un-evolvable environment variables -->
-        <simulation MaxSimCounter        = "20"
-                    MaxSimTime           = "3600"
+        <simulation MaxSimCounter        = "1"
+                    MaxSimTime           = "60"
                     VariableSeed         = "1"
                     OutputData           = "1"
                     ResourceDensityDelay = "4"
@@ -67,7 +67,7 @@
                     NestRadius           = "0.25"
                     NestElevation        = "0.01"
                     FoodRadius           = "0.05"
-                    FoodDistribution     = "1"/>
+                    FoodDistribution     = "0"/>
 
 		<!-- un-evolvable food distribution parameters -->
         <_0_FoodDistribution_Random   FoodItemCount    = "256"/>
@@ -112,17 +112,5 @@
     <media><led id="leds"/></media>
 
     <!-- VISUALIZATION -->
-    <visualization>
-        <qt-opengl>
-            <camera>
-                <placement idx="0" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="25"/>
-                <placement idx="1" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="45"/>
-                <placement idx="2" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="120"/>
-                <placement idx="3" position="-30, 0, 10" look_at="0, 0, 0" lens_focal_length="180"/>
-                <placement idx="4" position="-30, 0, 10" look_at="0, 0, 0" lens_focal_length="240"/>
-            </camera>
-            <user_functions label="iAnt_qt_user_functions"/>
-        </qt-opengl>
-    </visualization>
 
 </argos-configuration>

@@ -176,6 +176,7 @@ void iAnt_loop_functions::PostExperiment() {
 
         dataOutput << "[" << getFitness() << "], ";
         dataOutput << time_in_minutes << ", " << RandomSeed << endl;
+        outputChromosome(dataOutput);
         dataOutput.close();
     }
 
@@ -184,11 +185,11 @@ void iAnt_loop_functions::PostExperiment() {
         //LOG << "\ntags_collected, time_in_minutes, random_seed\n";
         LOG << "[" << getFitness() << "], ";
         LOG << time_in_minutes << ", " << RandomSeed << ", " << endl;
-        //outputChromosome();
+        outputChromosome();
     } else {
         LOG << "[" << getFitness() << "], ";
         LOG << time_in_minutes << ", " << RandomSeed << ", "  << endl;
-        //outputChromosome();
+        outputChromosome();
     }
 
     SimCounter++;
@@ -553,11 +554,28 @@ void iAnt_loop_functions::outputChromosome(){
     LOG << endl;
 }
 
+void iAnt_loop_functions::outputChromosome(ofstream& out){
+    for(int i = 0; i < chromosome->getSize(); i++){
+        Chromosome::Gene * gene = chromosome->getGene(i);
+        out << gene->feature;
+        out << ",";
+        out << gene->active;
+        out << ",";
+        out << gene->from;
+        out << ",";
+        out << gene->to;
+        out << ",";
+        out << gene->weight;
+        out << ";";
+    }
+    out << endl;
+}
+
 Real iAnt_loop_functions::getFitness() {
     Real fitness = 0;
 
     fitness += FoodItemCount - FoodList.size();
-    fitness += 10 * foodReturned;
+    fitness += 2 * foodReturned;
 
 
     return fitness;

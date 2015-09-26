@@ -114,6 +114,7 @@ class iAnt_loop_functions : public CLoopFunctions {
         bool IsCollidingWithNest(CVector2 p);
         bool IsCollidingWithFood(CVector2 p);
     void outputChromosome();
+    void outputChromosome(ofstream& out);
 
     void loadChromosome(string basic_string);
     void Tokenize(const string& str, vector<string>& tokens, const string& delimiters);

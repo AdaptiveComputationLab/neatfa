@@ -29,6 +29,16 @@ int main(int argc, char** argv) {
         argos::LOG << "Generation #";
         argos::LOG << i;
         argos::LOG << " started.\n";
+
+            // This file is created in the directory where you run ARGoS
+            // it is always created or appended to, never overwritten, i.e. ios::app
+            ofstream dataOutput("iAntTagData.txt", ios::app);
+
+            dataOutput << "Generation #";
+            dataOutput << i;
+            dataOutput << " started.\n";
+            dataOutput.close();
+
         vector<BasicGA::FitnessChromosome> fitness;
 
         int fitsum = 0;
@@ -51,6 +61,17 @@ int main(int argc, char** argv) {
         argos::LOG << " total: ";
         argos::LOG << fitsum;
         argos::LOG <<"done.\n";
+
+        // This file is created in the directory where you run ARGoS
+        // it is always created or appended to, never overwritten, i.e. ios::app
+        ofstream dataOutput2("iAntTagData.txt", ios::app);
+
+
+        dataOutput2 << "Generation #";
+        dataOutput2 << i;
+        dataOutput2 << " total: ";
+        dataOutput2 << fitsum;
+        dataOutput2 <<"done.\n";
 
         chromosomes = ga.evolve(fitness);
     }

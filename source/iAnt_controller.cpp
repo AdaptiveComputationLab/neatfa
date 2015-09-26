@@ -4,7 +4,7 @@
 #include "iAnt_controller.h"
 
 static CRange<Real> NN_OUTPUT_RANGE(0.0f, 1.0f);
-static CRange<Real> WHEEL_ACTUATION_RANGE(-5.0f, 5.0f);
+static CRange<Real> WHEEL_ACTUATION_RANGE(-16.0f, 16.0f);
 
 /*****
  * Initialize most basic variables and objects here. Most of the setup should be done in the Init(...) function instead
@@ -101,12 +101,12 @@ void iAnt_controller::ControlStep() {
     NN_OUTPUT_RANGE.MapValueIntoRange(
             m_fLeftSpeed,               // value to write
             network->getOutputs().at(0)->getCachedValue(), // value to read
-            WHEEL_ACTUATION_RANGE       // target range (here [-5:5])
+            WHEEL_ACTUATION_RANGE       // target range (here [-16:16])
     );
     NN_OUTPUT_RANGE.MapValueIntoRange(
             m_fRightSpeed,              // value to write
             network->getOutputs().at(1)->getCachedValue(), // value to read
-            WHEEL_ACTUATION_RANGE       // target range (here [-5:5])
+            WHEEL_ACTUATION_RANGE       // target range (here [-16:16])
     );
     motorActuator->SetLinearVelocity(
             m_fLeftSpeed,
