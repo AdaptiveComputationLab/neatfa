@@ -25,6 +25,18 @@ int main(int argc, char** argv) {
     ChromosomeFactory chromosomeFactory;
     vector<Chromosome*> chromosomes = chromosomeFactory.buildPopulation(10);
 
+    //initial population always scores 0
+    vector<BasicGA::FitnessChromosome> preFitness;
+    for (int c = 0; c < chromosomes.size(); c++) {
+        BasicGA::FitnessChromosome fitChromosome;
+        fitChromosome.chromosome = chromosomes.at(c);
+        fitChromosome.fitness = 0;
+        preFitness.push_back(fitChromosome);
+    }
+
+    chromosomes = ga.evolve(preFitness);
+
+
     for(int i = 0; i < 100; i++) {
         argos::LOG << "Generation #";
         argos::LOG << i;
@@ -71,7 +83,7 @@ int main(int argc, char** argv) {
         dataOutput2 << i;
         dataOutput2 << " total: ";
         dataOutput2 << fitsum;
-        dataOutput2 <<"done.\n";
+        dataOutput2 <<" done.\n";
 
         chromosomes = ga.evolve(fitness);
     }

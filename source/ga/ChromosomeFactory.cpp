@@ -33,6 +33,8 @@ vector<Chromosome *> ChromosomeFactory::buildPopulation(int count) {
         population.push_back(chromosome);
     }
 
+    Unique::getInstance().setNodeId(INPUT_COUNT + OUTPUT_COUNT + 1);
+
     return population;
 }
 

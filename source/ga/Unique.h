@@ -19,6 +19,7 @@ public:
     }
 
     int getNodeId(){ return ++atomicId;}
+    void setNodeId(int nodeId){ atomicId = nodeId;}
     int getFeatureId(){ return ++featureId;}
 private:
     Unique() {};                   // Constructor? (the {} brackets) are needed here.

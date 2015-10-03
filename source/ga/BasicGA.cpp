@@ -132,15 +132,20 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
         Chromosome* candidate = input.at(i % input.size());
 
         if (getRandomFloat() <= WEIGHT_MUTATION_PERCENTAGE) {
-            cout << "WEIGHT MUTATION\n";
-            Chromosome::Gene* genCandidate = candidate->getRandomGene();
-            genCandidate->weight = genCandidate->weight + (4 * (getRandomFloat() - 0.5f));
+            int edgesToMutate = rand() % 4;
+            cout << "WEIGHT MUTATION (" << edgesToMutate << "): ";
+            for (int i = 0; i < edgesToMutate; i++) {
+                Chromosome::Gene *genCandidate = candidate->getRandomGene();
+                genCandidate->weight = genCandidate->weight + (4 * (getRandomFloat() - 0.5f));
+                cout << genCandidate->feature << ", ";
+            }
+            cout  << endl;
         }
 
         //edge add mutation
         if (getRandomFloat() <= EDGE_ADD_MUTATION_PERCENTAGE) {
-            cout << "EDGE MUTATION\n";
             int edgesToAdd = 1;
+            cout << "EDGE MUTATION (" << edgesToAdd << "): ";
             for(int k = 0; k < edgesToAdd; k++){
                 int startNode = candidate->getRandomNode();
                 int endNode = candidate->getRandomNode();
@@ -155,6 +160,7 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
                         }
                         //connection exists
                         buildEdge = false;
+                        cout << "reactivate: " << gene->feature << ", ";
                     }
                 }
 
@@ -166,25 +172,29 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
                     gene->to = endNode;
                     gene->weight = getRandomFloat();
                     candidate->addGene(gene);
+                    cout << gene->feature << ", ";
                 }
             }
+            cout << endl;
         }
 
         //edge remove mutation
         if (getRandomFloat() <= EDGE_REMOVE_MUTATION_PERCENTAGE) {
             int edgesToRemove = 1;
-            cout << "REMOVING RANDOM EDGES (" << edgesToRemove << ")\n";
+            cout << "REMOVING RANDOM EDGES (" << edgesToRemove << "): ";
             for(int m = 0; m < edgesToRemove; m++){
                 Chromosome::Gene* genCandidate = candidate->getRandomGene();
-                genCandidate->weight = 0;
+                genCandidate->active = false;
+                cout << genCandidate->feature << ", ";
             }
+            cout << endl;
         }
 
         //node add mutation
         if (getRandomFloat() <= NODE_ADD_MUTATION_PERCENTAGE) {
-            cout << "NODE ADD MUTATION\n";
             int nodesToAdd = 1;
-            for(int n = 0; n < nodesToAdd && candidate->getSize() < TOTAL_NODE_COUNT; n++){
+            cout << "NODE ADD MUTATION (" << nodesToAdd << "): ";
+            for(int n = 0; n < nodesToAdd /*(&& candidate->getSize() < TOTAL_NODE_COUNT*/; n++){
                 Chromosome::Gene* splitEdge = candidate->getRandomGene();
                 if(splitEdge->active){
                     int new_node = Unique::getInstance().getNodeId();
@@ -207,8 +217,11 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
                     candidate->addGene(two);
 
                     splitEdge->active = false;
+
+                    cout << one->feature << " & " << two->feature << " adding " << new_node << ", ";
                 }
             }
+            cout << endl;
         }
     }
 
