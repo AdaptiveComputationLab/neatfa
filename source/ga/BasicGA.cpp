@@ -132,11 +132,11 @@ vector<Chromosome*> BasicGA::mutation(vector<Chromosome*> input) {
         Chromosome* candidate = input.at(i % input.size());
 
         if (getRandomFloat() <= WEIGHT_MUTATION_PERCENTAGE) {
-            int edgesToMutate = rand() % 4;
+            int edgesToMutate = (rand() % 4) + 1;
             cout << "WEIGHT MUTATION (" << edgesToMutate << "): ";
             for (int i = 0; i < edgesToMutate; i++) {
                 Chromosome::Gene *genCandidate = candidate->getRandomGene();
-                genCandidate->weight = genCandidate->weight + (4 * (getRandomFloat() - 0.5f));
+                genCandidate->weight += (getRandomFloat() - 0.5f);
                 cout << genCandidate->feature << ", ";
             }
             cout  << endl;
