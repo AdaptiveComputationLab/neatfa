@@ -180,18 +180,6 @@ void iAnt_loop_functions::PostExperiment() {
         dataOutput.close();
     }
 
-    // output to ARGoS GUI
-    if(SimCounter == 0) {
-        //LOG << "\ntags_collected, time_in_minutes, random_seed\n";
-        LOG << "[" << getFitness() << "], ";
-        LOG << time_in_minutes << ", " << RandomSeed << ", " << endl;
-        outputChromosome();
-    } else {
-        LOG << "[" << getFitness() << "], ";
-        LOG << time_in_minutes << ", " << RandomSeed << ", "  << endl;
-        outputChromosome();
-    }
-
     SimCounter++;
 }
 
@@ -491,8 +479,6 @@ REGISTER_LOOP_FUNCTIONS(iAnt_loop_functions, "iAnt_loop_functions");
 
 void iAnt_loop_functions::loadChromosome(string input) {
 
-    cout << "Loading Chromosome " << input << endl;
-
     chromosome = new Chromosome();
 
     vector<string> chromosomeTokens;
@@ -515,8 +501,6 @@ void iAnt_loop_functions::loadChromosome(string input) {
             chromosome->addGene(gene);
         }
     }
-
-    cout << "Finished";
 }
 
 void iAnt_loop_functions::Tokenize(const string& str, vector<string>& tokens, const string& delimiters)

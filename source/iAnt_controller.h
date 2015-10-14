@@ -22,95 +22,55 @@ class iAnt_loop_functions;
  *****/
 class iAnt_controller : public CCI_Controller {
 
-    public:
+public:
 
-        /* constructor and destructor */
-        iAnt_controller();
-        virtual ~iAnt_controller() {}
+    /* constructor and destructor */
+    iAnt_controller();
+    virtual ~iAnt_controller() {}
 
-        /* CCI_Controller Inherited Functions */
-        void Init(TConfigurationNode& node);
-        void ControlStep();
-        void Reset();
+    /* CCI_Controller Inherited Functions */
+    void Init(TConfigurationNode& node);
+    void ControlStep();
+    void Reset();
 
-        /* public helper functions */
-        bool IsHoldingFood() { return isHoldingFood; }
-        bool IsInTheNest();
-        void SetLoopFunctions(iAnt_loop_functions* lf) { loopFunctions = lf; }
-        CVector2 GetPosition();
-        CVector3 GetStartPosition() { return startPosition; }
-        CVector2 GetTarget() { return targetPosition; }
+    /* public helper functions */
+    bool IsHoldingFood() { return isHoldingFood; }
+    void SetLoopFunctions(iAnt_loop_functions* lf) { loopFunctions = lf; }
+    CVector2 GetPosition();
+    CVector3 GetStartPosition() { return startPosition; }
 
-    private:
+private:
 
-        Chromosome* chromosome;
-        NeuralNetwork* network;
-        bool networkInitalized;
+    Chromosome* chromosome;
+    NeuralNetwork* network;
+    bool networkInitalized;
 
-        Real m_fLeftSpeed;
-        Real m_fRightSpeed;
+    Real m_fLeftSpeed;
+    Real m_fRightSpeed;
 
-        /* foot-bot components: sensors and actuators */
-        CCI_PositioningSensor*            compass;
-        CCI_DifferentialSteeringActuator* motorActuator;
-        CCI_FootBotProximitySensor*       proximitySensor;
+    /* foot-bot components: sensors and actuators */
+    CCI_PositioningSensor*            compass;
+    CCI_DifferentialSteeringActuator* motorActuator;
+    CCI_FootBotProximitySensor*       proximitySensor;
 
-        /* iAnt controller parameters */
-        Real             distanceTolerance;
-        Real             searchStepSize;
-        Real             robotForwardSpeed;
-        Real             robotRotationSpeed;
-        CRange<CRadians> angleToleranceInRadians;
+    /* iAnt controller parameters */
+    Real             distanceTolerance;
+    Real             searchStepSize;
+    Real             robotForwardSpeed;
+    Real             robotRotationSpeed;
+    CRange<CRadians> angleToleranceInRadians;
 
-        /* robot internal variables & statistics */
-        CRandom::CRNG*       RNG;
-        iAnt_loop_functions* loopFunctions;
-        CVector3             startPosition;
-        CVector2             targetPosition;
-        CVector2             fidelityPosition;
-        vector<CVector2>     trailToShare;
-        vector<CVector2>     trailToFollow;
+    /* robot internal variables & statistics */
+    CRandom::CRNG*       RNG;
+    iAnt_loop_functions* loopFunctions;
+    CVector3             startPosition;
 
-        bool   isHoldingFood;
-        bool   isInformed;
-        bool   isUsingSiteFidelity;
-        bool   isGivingUpSearch;
-        size_t searchTime;
-        size_t waitTime;
-        size_t collisionDelay;
-        size_t resourceDensity;
+    bool   isHoldingFood;
 
-    private:
+private:
 
-        /* iAnt CPFA state variable */
-        enum CPFA { DEPARTING, SEARCHING, RETURNING } CPFA;
-
-        /* iAnt CPFA state functions */
-        void departing();
-        void searching();
-        void returning();
-
-        /* CPFA helper functions */
-        void SetHoldingFood();
-        bool IsNearFood();
-        void SetRandomSearchLocation();
-        void SetLocalResourceDensity();
-        void SetFidelityList(CVector2 newFidelity);
-        void SetFidelityList();
-        bool SetTargetPheromone();
-
-        Real GetExponentialDecay(Real value, Real time, Real lambda);
-        Real GetBound(Real x, Real min, Real max);
-        Real GetPoissonCDF(Real k, Real lambda);
-
-        /* navigation helper functions */
-        CRadians GetHeading();
-        CRadians GetCollisionHeading();
-        bool     IsCollisionDetected();
-        void     ApproachTheTarget();
-        void     SetTargetInBounds(CVector2 newTarget);
-
-    float getRandomFloat(){return static_cast <float> (rand()) / (static_cast <float> (RAND_MAX));}
+    void SetHoldingFood();
+    bool IsNearFood();
 
 };
 

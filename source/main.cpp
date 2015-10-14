@@ -15,78 +15,32 @@
 
 int main(int argc, char** argv) {
 
+    string filename = "experiments/gant";
+
+    if(argc > 1) {
+        filename += argv[1];
+    }
+
+    filename += ".xml";
+
+    ofstream outfile (filename.c_str());
+
+    //read stdin to the iant file
+    for (std::string line; std::getline(std::cin, line);) {
+        outfile << line << std::endl;
+    }
+
     static argos::CSimulator& cSimulator = argos::CSimulator::GetInstance();
 
-    cSimulator.SetExperimentFileName("experiments/iAnt.xml");
+    cSimulator.SetExperimentFileName(filename.c_str());
     cSimulator.LoadExperiment();
 
     iAnt_loop_functions &cLoopFunctions = (iAnt_loop_functions&)(cSimulator.GetLoopFunctions());
-    BasicGA ga;
-    ChromosomeFactory chromosomeFactory;
-    vector<Chromosome*> chromosomes = chromosomeFactory.buildPopulation(10);
 
-    //initial population always scores 0
-    vector<BasicGA::FitnessChromosome> preFitness;
-    for (int c = 0; c < chromosomes.size(); c++) {
-        BasicGA::FitnessChromosome fitChromosome;
-        fitChromosome.chromosome = chromosomes.at(c);
-        fitChromosome.fitness = 0;
-        preFitness.push_back(fitChromosome);
-    }
+    cSimulator.Reset();
+    cSimulator.Execute();
 
-    chromosomes = ga.evolve(preFitness);
-
-
-    for(int i = 0; i < 100; i++) {
-        argos::LOG << "Generation #";
-        argos::LOG << i;
-        argos::LOG << " started.\n";
-
-            // This file is created in the directory where you run ARGoS
-            // it is always created or appended to, never overwritten, i.e. ios::app
-            ofstream dataOutput("iAntTagData.txt", ios::app);
-
-            dataOutput << "Generation #";
-            dataOutput << i;
-            dataOutput << " started.\n";
-            dataOutput.close();
-
-        vector<BasicGA::FitnessChromosome> fitness;
-
-        int fitsum = 0;
-
-        for (int c = 0; c < chromosomes.size(); c++) {
-            cLoopFunctions.setChromosome(chromosomes.at(c));
-	        cSimulator.Reset();
-            cSimulator.Execute();
-
-
-            BasicGA::FitnessChromosome fitChromosome;
-            fitChromosome.chromosome = chromosomes.at(c);
-            fitChromosome.fitness = cLoopFunctions.getFitness();
-            fitsum += fitChromosome.fitness;
-            fitness.push_back(fitChromosome);
-        }
-
-        argos::LOG << "Generation #";
-        argos::LOG << i;
-        argos::LOG << " total: ";
-        argos::LOG << fitsum;
-        argos::LOG <<"done.\n";
-
-        // This file is created in the directory where you run ARGoS
-        // it is always created or appended to, never overwritten, i.e. ios::app
-        ofstream dataOutput2("iAntTagData.txt", ios::app);
-
-
-        dataOutput2 << "Generation #";
-        dataOutput2 << i;
-        dataOutput2 << " total: ";
-        dataOutput2 << fitsum;
-        dataOutput2 <<" done.\n";
-
-        chromosomes = ga.evolve(fitness);
-    }
+    cout << "Fitness:" << cLoopFunctions.getFitness() << endl;
 
     /*
      * Dispose of ARGoS stuff
