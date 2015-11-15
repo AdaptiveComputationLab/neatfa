@@ -6,7 +6,7 @@
  * ARGoS it must be registered using the RegisterUserFunction function.
  *****/
 iAnt_qt_user_functions::iAnt_qt_user_functions() :
-    loopFunctions(dynamic_cast<iAnt_loop_functions&>(CSimulator::GetInstance().GetLoopFunctions()))
+    loopFunctions((iAnt_loop_functions&)(CSimulator::GetInstance().GetLoopFunctions()))
 {
     RegisterUserFunction<iAnt_qt_user_functions, CFootBotEntity>(&iAnt_qt_user_functions::DrawOnRobot);
     RegisterUserFunction<iAnt_qt_user_functions, CFloorEntity>(&iAnt_qt_user_functions::DrawOnArena);
@@ -16,7 +16,7 @@ iAnt_qt_user_functions::iAnt_qt_user_functions() :
  *
  *****/
 void iAnt_qt_user_functions::DrawOnRobot(CFootBotEntity& entity) {
-    iAnt_controller& c = dynamic_cast<iAnt_controller&>(entity.GetControllableEntity().GetController());
+    iAnt_controller& c = (iAnt_controller&)(entity.GetControllableEntity().GetController());
 
     if(c.IsHoldingFood() == true) {
         DrawCylinder(CVector3(0.0, 0.0, 0.3), CQuaternion(), loopFunctions.FoodRadius, 0.025, CColor::BLACK);

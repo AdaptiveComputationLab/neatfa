@@ -117,7 +117,7 @@ void iAnt_loop_functions::Init(TConfigurationNode& node) {
 
     for(it = footbots.begin(); it != footbots.end(); it++) {
         CFootBotEntity& footBot = *any_cast<CFootBotEntity*>(it->second);
-        iAnt_controller& c = dynamic_cast<iAnt_controller&>(footBot.GetControllableEntity().GetController());
+        iAnt_controller& c = (iAnt_controller&)(footBot.GetControllableEntity().GetController());
 
         c.SetLoopFunctions(this);
     }
@@ -208,7 +208,7 @@ void iAnt_loop_functions::Reset() {
 
     for(it = footbots.begin(); it != footbots.end(); it++) {
         CFootBotEntity& footBot = *any_cast<CFootBotEntity*>(it->second);
-        iAnt_controller& c = dynamic_cast<iAnt_controller&>(footBot.GetControllableEntity().GetController());
+        iAnt_controller& c = (iAnt_controller&)(footBot.GetControllableEntity().GetController());
 
         MoveEntity(footBot.GetEmbodiedEntity(), c.GetStartPosition(), CQuaternion(), false);
         c.Reset();
