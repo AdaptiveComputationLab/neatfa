@@ -63,12 +63,26 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(4)->setValue(isHoldingFood? 1 : 0);
     network->getInputs().at(5)->setValue(IsNearFood()? 1 : 0);
 
-    for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
+    int frontIndexes[6] = {21, 22, 23, 0, 1, 2};
+    Real front = sumProximity(frontIndexes);
+    int leftIndexes[6] = {3, 4, 5, 6, 7, 8};
+    Real left = sumProximity(leftIndexes);
+    int backIndexes[6] = {9, 10, 11, 12, 13, 14};
+    Real back = sumProximity(backIndexes);
+    int rightIndexes[6] = {15, 16, 17, 18, 19, 20};
+    Real right = sumProximity(rightIndexes);
+
+    network->getInputs().at(6)->setValue(front);
+    network->getInputs().at(7)->setValue(left);
+    network->getInputs().at(8)->setValue(back);
+    network->getInputs().at(9)->setValue(right);
+
+
+    /*for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
         network->getInputs().at(i + 5)->setValue(proximitySensor->GetReadings().at(i).Value);
-    }
+    }*/
 
     network->update();
-
 
     NN_OUTPUT_RANGE.MapValueIntoRange(
             m_fLeftSpeed,               // value to write
@@ -85,6 +99,16 @@ void iAnt_controller::ControlStep() {
             m_fRightSpeed);
 
     SetHoldingFood();
+}
+
+Real iAnt_controller::sumProximity(int sensorIndex[]) {
+    Real sum = 0;
+
+    for(int i = 0; i < 6; i++){
+        sum += sensorIndex[i];
+    }
+
+    return sum;
 }
 
 /*****

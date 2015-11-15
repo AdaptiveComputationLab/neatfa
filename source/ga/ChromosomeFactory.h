@@ -15,7 +15,7 @@ public:
 
     static const int BIAS_COUNT = 1;
     static const int COMPASS_COUNT = 4;
-    static const int PROXIMITY_COUNT = 24;
+    static const int PROXIMITY_COUNT = 4;
     static const int HOLDING_FOOD_COUNT = 1;
     static const int NEAR_FOOD_COUNT = 1;
     static const int INPUT_COUNT = BIAS_COUNT + COMPASS_COUNT + PROXIMITY_COUNT + HOLDING_FOOD_COUNT + NEAR_FOOD_COUNT;

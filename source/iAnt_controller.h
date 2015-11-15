@@ -71,6 +71,7 @@ private:
 
     void SetHoldingFood();
     bool IsNearFood();
+    Real sumProximity(int sensorIndex[]);
 
 };
 
