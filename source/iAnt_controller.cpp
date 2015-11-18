@@ -104,8 +104,10 @@ void iAnt_controller::ControlStep() {
 Real iAnt_controller::sumProximity(int sensorIndex[]) {
     Real sum = 0;
 
-    for(int i = 0; i < 6; i++){
-        sum += sensorIndex[i];
+    for(int i = 0; i < 6; i++) {
+        if (sensorIndex[i] > sum) {
+            sum = sensorIndex[i];
+        }
     }
 
     return sum;
