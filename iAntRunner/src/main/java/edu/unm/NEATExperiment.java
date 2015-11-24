@@ -10,16 +10,22 @@ import java.util.concurrent.*;
 /**
  * @author John Ericksen
  */
-public class NEATExperiemnt {
+public class NEATExperiment {
 
     private final Logger log;
     private final List<OrganismExecutor> executors;
     private final int populationSize;
+    private final int runtime;
+    private final int distribution;
+    private final int entityCount;
 
-    public NEATExperiemnt(List<OrganismExecutor> executors, Logger log, int populationSize) {
+    public NEATExperiment(List<OrganismExecutor> executors, Logger log, int populationSize, int runtime, int distribution, int entityCount) {
         this.executors = executors;
         this.log = log;
         this.populationSize = populationSize;
+        this.runtime = runtime;
+        this.distribution = distribution;
+        this.entityCount = entityCount;
     }
 
     public void run() throws Exception {
@@ -51,7 +57,7 @@ public class NEATExperiemnt {
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        organismExecutor.listen(queue, epoch);
+                        organismExecutor.listen(queue, epoch, runtime, distribution, entityCount);
                     }
                 });
             }

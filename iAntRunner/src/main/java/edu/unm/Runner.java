@@ -12,8 +12,11 @@ public class Runner {
 
         long startTime = System.currentTimeMillis();
         int populationSize = 100;
-        int localRunnerCount = 10;
-        int remoteRunnerCount = 0;
+        int runtime = 3600;
+        int distribution = 0;
+        int entityCount = 6;
+        int localRunnerCount = Runtime.getRuntime().availableProcessors();
+        int remoteRunnerCount = 4;
 
         Logger log = new Logger(startTime);
         List<OrganismExecutor> executors = new ArrayList<OrganismExecutor>();
@@ -28,7 +31,7 @@ public class Runner {
             executors.add(new RemoteOrganismExecutor("johncarl@maricopa.cs.unm.edu", "~/iAnt-ARGOS;", log, startTime));
         }
 
-        NEATExperiemnt experiment = new NEATExperiemnt(executors, log, populationSize);
+        NEATExperiment experiment = new NEATExperiment(executors, log, populationSize, runtime, distribution, entityCount);
 
         experiment.run();
 

@@ -50,7 +50,7 @@
 
         <!-- un-evolvable environment variables -->
         <simulation MaxSimCounter        = "1"
-                    MaxSimTime           = "3600"
+                    MaxSimTime           = "${runtime}"
                     Chromosome = "${chromosome}"
                     VariableSeed         = "1"
                     OutputData           = "1"
@@ -62,7 +62,7 @@
                     NestRadius           = "0.25"
                     NestElevation        = "0.01"
                     FoodRadius           = "0.05"
-                    FoodDistribution     = "0"/>
+                    FoodDistribution     = "${distribution}"/>
 
 		<!-- un-evolvable food distribution parameters -->
         <_0_FoodDistribution_Random   FoodItemCount    = "256"/>
@@ -93,7 +93,7 @@
                       layout="2, 3, 1" />
             <orientation method="constant" values="0.0, 0.0, 0.0" />
 
-            <entity quantity="6" max_trials="100">
+            <entity quantity="${entitycount}" max_trials="100">
                 <foot-bot id="fb_"><controller config="iAnt_c"/></foot-bot>
             </entity>
         </distribute>

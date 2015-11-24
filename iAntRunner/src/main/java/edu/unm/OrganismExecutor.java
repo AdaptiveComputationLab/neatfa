@@ -26,13 +26,13 @@ public abstract class OrganismExecutor {
         this.log = log;
     }
 
-    public void listen(Queue<OrganismIdWrapper> queue, int epoch) {
+    public void listen(Queue<OrganismIdWrapper> queue, int epoch, int runtime, int distribution, int entityCount) {
         while(!queue.isEmpty()){
             final OrganismIdWrapper organismWrapper = queue.poll();
             if(organismWrapper != null){
                 final Organism organism = organismWrapper.getOrganism();
                 final String chromosome = organismWrapper.buildChromosone();
-                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, Integer.toString(RAND.nextInt())).getBytes());
+                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(), runtime, distribution, entityCount).getBytes());
 
                 String tag = startTime + "E" + epoch + "C" + organismWrapper.getId();
 
