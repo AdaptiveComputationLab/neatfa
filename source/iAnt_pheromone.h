@@ -15,13 +15,12 @@ class iAnt_pheromone {
     public:
 
         /* constructor function */
-		iAnt_pheromone(CVector2 newLocation, vector<CVector2> newTrail, Real newTime, Real newDecayRate);
+		iAnt_pheromone(CVector2 newLocation, Real newTime, Real newDecayRate);
 
         /* public helper functions */
         void             Update(Real time);
         void             Deactivate();
 		CVector2         GetLocation();
-        vector<CVector2> GetTrail();
 		Real             GetWeight();
         bool             IsActive();
 
@@ -29,7 +28,6 @@ class iAnt_pheromone {
 
         /* pheromone position variables */
 		CVector2         location;
-        vector<CVector2> trail;
 
         /* pheromone component variables */
 		Real lastUpdated;

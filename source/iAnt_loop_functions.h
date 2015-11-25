@@ -98,8 +98,8 @@ class iAnt_loop_functions : public CLoopFunctions {
         vector<CVector2>       FoodList;
         vector<CColor>         FoodColoringList;
         vector<CVector2>       FidelityList;
-        vector<iAnt_pheromone> PheromoneList;
         vector<CRay3>          TargetRayList;
+        vector<iAnt_pheromone> Pheromones;
 
     private:
 

@@ -2,7 +2,7 @@
 #include <source/ga/ChromosomeFactory.h>
 #include "iAnt_controller.h"
 
-static CRange<Real> NN_OUTPUT_RANGE(0.0f, 1.0f);
+static CRange<Real> NN_OUTPUT_RANGE(-1.0f, 1.0f);
 static CRange<Real> WHEEL_ACTUATION_RANGE(-16.0f, 16.0f);
 
 /*****
@@ -77,6 +77,8 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(8)->setValue(back);
     network->getInputs().at(9)->setValue(right);
 
+    network->getInputs().at(10)->setValue(IsNearPherimone()? 1 : 0);
+
 
     /*for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
         network->getInputs().at(i + 5)->setValue(proximitySensor->GetReadings().at(i).Value);
@@ -97,6 +99,10 @@ void iAnt_controller::ControlStep() {
     motorActuator->SetLinearVelocity(
             m_fLeftSpeed,
             m_fRightSpeed);
+
+    if(network->getOutputs().at(2)->getCachedValue() > 0){
+        layPherimone();
+    }
 
     SetHoldingFood();
 }
@@ -180,6 +186,23 @@ bool iAnt_controller::IsNearFood() {
         }
     }
     return false;
+}
+
+bool iAnt_controller::IsNearPherimone() {
+    for(int i = 0; i < loopFunctions->Pheromones.size(); i++) {
+        if (loopFunctions->Pheromones[i].IsActive() && ((GetPosition() - loopFunctions->Pheromones[i].GetLocation()).SquareLength() < loopFunctions->FoodRadiusSquared)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void iAnt_controller::layPherimone() {
+    if (!IsNearPherimone()) {
+        Real timeInSeconds = (Real)(loopFunctions->SimTime / loopFunctions->TicksPerSecond);
+        iAnt_pheromone sharedPheromone(GetPosition(), timeInSeconds, loopFunctions->RateOfPheromoneDecay);
+        loopFunctions->Pheromones.push_back(sharedPheromone);
+    }
 }
 
 /*****

@@ -13,7 +13,7 @@ Real Perceptron::getValue() {
     }
 
     // Sigmoid
-    return (float)(1 / (1 + exp(sum)));
+    return (float)((2 * (1 / (1 + exp(-sum)))) - 1);
 }
 
 void Perceptron::add(Real weight, Neuron* neuron) {

@@ -3,7 +3,9 @@ package edu.unm;
 import edu.unm.neat.jneat.Neat;
 import edu.unm.neat.jneat.Organism;
 import edu.unm.neat.jneat.Population;
+import edu.unm.neat.jneat.Species;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -35,8 +37,7 @@ public class NEATExperiment {
 
         Neat.p_pop_size = populationSize;
 
-        Population population = new Population(Neat.p_pop_size, 11, 2, 5, true, 1);
-        population.verify();
+        Population population = new Population(Neat.p_pop_size, 12, 3, 5, true, 0.5);
 
 
         for (int e = 0; e < 100; e++) {
@@ -67,6 +68,14 @@ public class NEATExperiment {
             while (!executor.awaitTermination(1, TimeUnit.SECONDS)) {}
 
             outputStatistics(e, population);
+
+            Iterator itr_specie;
+            itr_specie = population.species.iterator();
+            while (itr_specie.hasNext()) {
+                Species _specie = ((Species) itr_specie.next());
+                _specie.compute_average_fitness();
+                _specie.compute_max_fitness();
+            }
 
             population.epoch(e);
 

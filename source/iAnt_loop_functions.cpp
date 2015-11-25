@@ -143,7 +143,7 @@ void iAnt_loop_functions::PreStep() {
     if(FoodList.size() == 0) {
         FidelityList.clear();
         TargetRayList.clear();
-        PheromoneList.clear();
+        Pheromones.clear();
     }
 
 }
@@ -197,7 +197,7 @@ void iAnt_loop_functions::Reset() {
     MaxSimCounter = SimCounter;
     SimCounter = 0;
     FoodList.clear();
-    PheromoneList.clear();
+    Pheromones.clear();
     FidelityList.clear();
     TargetRayList.clear();
     SetFoodDistribution();
@@ -251,21 +251,21 @@ void iAnt_loop_functions::UpdatePheromoneList() {
 
     vector<iAnt_pheromone> new_p_list;
 
-    for(size_t i = 0; i < PheromoneList.size(); i++) {
+    for(size_t i = 0; i < Pheromones.size(); i++) {
 
-        PheromoneList[i].Update((Real)(SimTime / TicksPerSecond));
+        Pheromones[i].Update((Real)(SimTime / TicksPerSecond));
 
         //if(PheromoneList[i].IsActive()) LOG << "O" << endl;
         //else LOG << "X" << endl;
 
-        if(PheromoneList[i].IsActive() == true) {
-            new_p_list.push_back(PheromoneList[i]);
+        if(Pheromones[i].IsActive() == true) {
+            new_p_list.push_back(Pheromones[i]);
         }
     }
 
     //LOG << endl;
 
-    PheromoneList = new_p_list;
+    Pheromones = new_p_list;
 }
 
 /*****

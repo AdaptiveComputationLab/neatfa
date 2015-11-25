@@ -105,5 +105,19 @@
 
     <!-- MEDIA -->
     <media><led id="leds"/></media>
+    <!--
+    <visualization>
+        <qt-opengl>
+            <camera>
+                <placement idx="0" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="25"/>
+                <placement idx="1" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="45"/>
+                <placement idx="2" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="120"/>
+                <placement idx="3" position="-30, 0, 10" look_at="0, 0, 0" lens_focal_length="180"/>
+                <placement idx="4" position="-30, 0, 10" look_at="0, 0, 0" lens_focal_length="240"/>
+            </camera>
+            <user_functions label="iAnt_qt_user_functions"/>
+        </qt-opengl>
+    </visualization>
+    -->
 
 </argos-configuration>

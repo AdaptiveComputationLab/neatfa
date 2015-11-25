@@ -88,46 +88,13 @@ void iAnt_qt_user_functions::DrawFidelity() {
  *****/
 void iAnt_qt_user_functions::DrawPheromones() {
 
-    Real x, y, weight;
-    vector<CVector2> trail;
-    CColor trailColor = CColor::GREEN, pColor = CColor::GREEN;
+    Real x, y;
 
-    for(size_t i = 0; i < loopFunctions.PheromoneList.size(); i++) {
-        x = loopFunctions.PheromoneList[i].GetLocation().GetX();
-        y = loopFunctions.PheromoneList[i].GetLocation().GetY();
-
-        if(loopFunctions.DrawTrails == 1) {
-            trail  = loopFunctions.PheromoneList[i].GetTrail();
-            weight = loopFunctions.PheromoneList[i].GetWeight();
-
-            if(weight > 0.25 && weight <= 1.0)        // [ 100.0% , 25.0% )
-                pColor = trailColor = CColor::GREEN;
-            else if(weight > 0.05 && weight <= 0.25)  // [  25.0% ,  5.0% )
-                pColor = trailColor = CColor::YELLOW;
-            else                                      // [   5.0% ,  0.0% ]
-                pColor = trailColor = CColor::RED;
-
-            CRay3 ray;
-            size_t j = 0;
-
-            for(j = 1; j < trail.size(); j++) {
-                ray = CRay3(CVector3(trail[j - 1].GetX(), trail[j - 1].GetY(), 0.01),
-                            CVector3(trail[j].GetX(), trail[j].GetY(), 0.01));
-                DrawRay(ray, trailColor, 1.0);
-            }
-
-            DrawCylinder(CVector3(x, y, 0.0), CQuaternion(), loopFunctions.FoodRadius, 0.025, pColor);
-        } else {
-            weight = loopFunctions.PheromoneList[i].GetWeight();
-
-            if(weight > 0.25 && weight <= 1.0)        // [ 100.0% , 25.0% )
-                pColor = CColor::GREEN;
-            else if(weight > 0.05 && weight <= 0.25)  // [  25.0% ,  5.0% )
-                pColor = CColor::YELLOW;
-            else                                      // [   5.0% ,  0.0% ]
-                pColor = CColor::RED;
-
-            DrawCylinder(CVector3(x, y, 0.0), CQuaternion(), loopFunctions.FoodRadius, 0.025, pColor);
+    for(size_t i = 0; i < loopFunctions.Pheromones.size(); i++) {
+        if (loopFunctions.Pheromones[i].IsActive()) {
+            x = loopFunctions.Pheromones[i].GetLocation().GetX();
+            y = loopFunctions.Pheromones[i].GetLocation().GetY();
+            DrawCylinder(CVector3(x, y, 0.0), CQuaternion(), loopFunctions.FoodRadius, 0.025, CColor::GREEN);
         }
     }
 }

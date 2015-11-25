@@ -11,13 +11,11 @@
  * The remaining variables always start with default values.
  *****/
 iAnt_pheromone::iAnt_pheromone(CVector2         newLocation,
-                               vector<CVector2> newTrail,
                                Real             newTime,
                                Real             newDecayRate)
 {
     /* required initializations */
 	location    = newLocation;
-    trail       = newTrail;
 	lastUpdated = newTime;
 	decayRate   = newDecayRate;
 
@@ -48,13 +46,6 @@ void iAnt_pheromone::Deactivate() {
  *****/
 CVector2 iAnt_pheromone::GetLocation() {
     return location;
-}
-
-/*****
- * Return the trail between the pheromone and the nest.
- *****/
-vector<CVector2> iAnt_pheromone::GetTrail() {
-    return trail;
 }
 
 /*****
