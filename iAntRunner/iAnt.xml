@@ -86,6 +86,21 @@
 
         <floor id="floor" source="loop_functions" pixels_per_meter="10"/>
 
+        <!-- Build walls around arena -->
+        <box id="wall_west" size="10,0.1,0.5" movable = "false">
+            <body position="0,5,0" orientation="0,0,0"/>
+        </box>
+        <box id="wall_east" size="10,0.1,0.5" movable = "false">
+            <body position="0,-5,0" orientation="0,0,0"/>
+        </box>
+
+        <box id="wall_south" size="0.1,10,0.5" movable = "false">
+            <body position="-5,0,0" orientation="0,0,0"/>
+        </box>
+        <box id="wall_north" size="0.1,10,0.5" movable = "false">
+            <body position="5,0,0" orientation="0,0,0"/>
+        </box>
+
         <distribute>
 
 
