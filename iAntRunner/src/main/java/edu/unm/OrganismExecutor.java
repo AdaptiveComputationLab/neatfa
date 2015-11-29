@@ -13,6 +13,7 @@ import java.util.Random;
  */
 public abstract class OrganismExecutor {
 
+    private static final int TRIALS = 5;
     private static final Random RAND = new Random(System.currentTimeMillis());
     private final IAntXMLBuilder builder;
     private final String homeDirectory;
@@ -32,19 +33,22 @@ public abstract class OrganismExecutor {
             if(organismWrapper != null){
                 final Organism organism = organismWrapper.getOrganism();
                 final String chromosome = organismWrapper.buildChromosone();
-                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), runtime, distribution, entityCount).getBytes());
-
                 final String tag = startTime + "E" + epoch + "C" + organismWrapper.getId();
 
-                new ProcessExecutable(homeDirectory, getExecutable(tag), xml,
-                        new ProcessExecutable.OnResultCallback() {
-                            @Override
-                            public void onResult(Long result) {
-                                organism.setFitness(result);
-                                log.log("done: Fitness: " + result + " Chromosone: " + tag + " " + chromosome);
+                for(int i = 0; i < TRIALS; i++) {
+                    InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), runtime, distribution, entityCount).getBytes());
+
+                    new ProcessExecutable(homeDirectory, getExecutable(tag), xml,
+                            new ProcessExecutable.OnResultCallback() {
+                                @Override
+                                public void onResult(Long result) {
+                                    organism.setFitness(organism.getFitness() + result);
+                                }
                             }
-                        }
-                ).run();
+                    ).run();
+                }
+                organism.setFitness(organism.getFitness() / TRIALS);
+                log.log("done: Fitness: " + organism.getFitness() + " Chromosone: " + tag + " " + chromosome);
             }
         }
     }
