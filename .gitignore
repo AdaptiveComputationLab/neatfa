@@ -1,4 +1,8 @@
-# ...silly Macs
 .DS_Store
 .idea
 experiments/*.xml
+runlog*.txt
+iAntRunner/c:\\*
+*.iml
+build/*
+iAntRunner/target/*
