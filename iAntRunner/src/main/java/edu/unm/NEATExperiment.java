@@ -1,5 +1,7 @@
 package edu.unm;
 
+import edu.unm.neat.jNeatCommon.NeatConstant;
+import edu.unm.neat.jNeatCommon.NeatRoutine;
 import edu.unm.neat.jneat.Neat;
 import edu.unm.neat.jneat.Organism;
 import edu.unm.neat.jneat.Population;
@@ -36,8 +38,18 @@ public class NEATExperiment {
         Neat.initbase();
 
         Neat.p_pop_size = populationSize;
+        Neat.p_survival_thresh = 0.1;
 
-        Population population = new Population(Neat.p_pop_size, 12, 3, 5, true, 0.5);
+        Neat.p_mutate_random_trait_prob = 0.1;
+        Neat.p_mutate_link_trait_prob = 0.1;
+        Neat.p_mutate_node_trait_prob = 0.1;
+        Neat.p_mutate_link_weights_prob = 0.1;
+        Neat.p_mutate_toggle_enable_prob = 0.05;
+        Neat.p_mutate_gene_reenable_prob = 0.05;
+
+        Neat.p_weight_mut_power = 1;
+
+        Population population = new Population(Neat.p_pop_size, 12, 3, 5, true, 1);
 
 
         for (int e = 0; e < 100; e++) {
@@ -68,14 +80,6 @@ public class NEATExperiment {
             while (!executor.awaitTermination(1, TimeUnit.SECONDS)) {}
 
             outputStatistics(e, population);
-
-            Iterator itr_specie;
-            itr_specie = population.species.iterator();
-            while (itr_specie.hasNext()) {
-                Species _specie = ((Species) itr_specie.next());
-                _specie.compute_average_fitness();
-                _specie.compute_max_fitness();
-            }
 
             population.epoch(e);
 

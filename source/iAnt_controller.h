@@ -72,7 +72,7 @@ private:
     void SetHoldingFood();
     bool IsNearFood();
     bool IsNearPherimone();
-    Real sumProximity(int sensorIndex[]);
+    Real maxProximity(int *sensorIndex);
 
     void layPherimone();
 };

@@ -64,13 +64,13 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(5)->setValue(IsNearFood()? 1 : 0);
 
     int frontIndexes[6] = {21, 22, 23, 0, 1, 2};
-    Real front = sumProximity(frontIndexes);
+    Real front = maxProximity(frontIndexes);
     int leftIndexes[6] = {3, 4, 5, 6, 7, 8};
-    Real left = sumProximity(leftIndexes);
+    Real left = maxProximity(leftIndexes);
     int backIndexes[6] = {9, 10, 11, 12, 13, 14};
-    Real back = sumProximity(backIndexes);
+    Real back = maxProximity(backIndexes);
     int rightIndexes[6] = {15, 16, 17, 18, 19, 20};
-    Real right = sumProximity(rightIndexes);
+    Real right = maxProximity(rightIndexes);
 
     network->getInputs().at(6)->setValue(front);
     network->getInputs().at(7)->setValue(left);
@@ -107,16 +107,17 @@ void iAnt_controller::ControlStep() {
     SetHoldingFood();
 }
 
-Real iAnt_controller::sumProximity(int sensorIndex[]) {
-    Real sum = 0;
+Real iAnt_controller::maxProximity(int *sensorIndex) {
+    Real maxProximity = 0;
 
     for(int i = 0; i < 6; i++) {
-        if (sensorIndex[i] > sum) {
-            sum = sensorIndex[i];
+        Real proximityValue = proximitySensor->GetReadings().at(sensorIndex[i]).Value;
+        if (proximityValue > maxProximity) {
+            maxProximity = proximityValue;
         }
     }
 
-    return sum;
+    return maxProximity;
 }
 
 /*****
