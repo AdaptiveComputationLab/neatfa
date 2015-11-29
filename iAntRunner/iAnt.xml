@@ -21,6 +21,7 @@
                                   show_rays      = "false"/>
             <positioning          implementation = "default"/>
             <footbot_motor_ground implementation = "rot_z_only"/>
+            <footbot_light        implementation= "rot_z_only" show_rays="true" />
         </sensors>
 
         <!-- un-evolvable parameters -->
@@ -74,11 +75,19 @@
     </loop_functions>
 
     <!-- ARENA -->
-    <arena size="10.0, 10.0, 1.0" center="0.0, 0.0, 0.0">
+    <arena size="10.0, 10.0, 1.0" center="0.0, 0.0, 0.5">
+
+        <light id="light"
+               position="0,0,0.5"
+               orientation="0,0,0"
+               color="yellow"
+               intensity="3.0"
+               medium="leds" />
 
         <floor id="floor" source="loop_functions" pixels_per_meter="10"/>
 
         <distribute>
+
 
             <position method = "uniform"
                       min    = "-1, -1, 0"

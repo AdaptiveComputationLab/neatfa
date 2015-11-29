@@ -13,6 +13,7 @@ iAnt_controller::iAnt_controller() :
     compass(NULL),
     motorActuator(NULL),
     proximitySensor(NULL),
+    lightSensor(NULL),
     distanceTolerance(0.0),
     searchStepSize(0.0),
     robotForwardSpeed(0.0),
@@ -37,6 +38,7 @@ void iAnt_controller::Init(TConfigurationNode& node) {
     motorActuator   = GetActuator<CCI_DSA>("differential_steering");
     compass         = GetSensor<CCI_PS>   ("positioning");
     proximitySensor = GetSensor<CCI_FBPS> ("footbot_proximity");
+    lightSensor     = GetSensor  <CCI_FootBotLightSensor>("footbot_light");
 
     CVector2 p(GetPosition());
     startPosition = CVector3(p.GetX(), p.GetY(), 0.0);
@@ -79,10 +81,18 @@ void iAnt_controller::ControlStep() {
 
     network->getInputs().at(10)->setValue(IsNearPherimone()? 1 : 0);
 
+    const CCI_FootBotLightSensor::TReadings& tReadings = lightSensor->GetReadings();
+    int numIndices = 6;
 
-    /*for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
-        network->getInputs().at(i + 5)->setValue(proximitySensor->GetReadings().at(i).Value);
-    }*/
+    int frontLight = maxLightIndex(tReadings, frontIndexes,numIndices);
+    int leftLight = maxLightIndex(tReadings, leftIndexes, numIndices);
+    int backLight = maxLightIndex(tReadings, backIndexes, numIndices);
+    int rightLight = maxLightIndex(tReadings, rightIndexes, numIndices);
+
+    network->getInputs().at(11)->setValue(tReadings[frontLight].Value);
+    network->getInputs().at(12)->setValue(tReadings[leftLight].Value);
+    network->getInputs().at(13)->setValue(tReadings[backLight].Value);
+    network->getInputs().at(14)->setValue(tReadings[rightLight].Value);
 
     network->update();
 
@@ -118,6 +128,21 @@ Real iAnt_controller::maxProximity(int *sensorIndex) {
     }
 
     return maxProximity;
+}
+
+int iAnt_controller::maxLightIndex(CCI_FootBotLightSensor::TReadings tReadings,
+                                   int sensorIndex[], int numIndices) {
+    Real maxVal = 0.0;
+
+    int maxIndex = sensorIndex[0];
+
+    for(int i = 0; i < numIndices; i++) {
+        if (maxVal > tReadings[sensorIndex[i]].Value){
+            maxVal= tReadings[sensorIndex[i]].Value;
+            maxIndex = i;
+        };
+    }
+    return maxIndex;
 }
 
 /*****

@@ -38,6 +38,16 @@ public class NEATExperiment {
         Neat.initbase();
 
         Neat.p_pop_size = populationSize;
+        Neat.p_survival_thresh = 0.1;
+
+        Neat.p_mutate_random_trait_prob = 0.1;
+        Neat.p_mutate_link_trait_prob = 0.1;
+        Neat.p_mutate_node_trait_prob = 0.1;
+        Neat.p_mutate_link_weights_prob = 0.1;
+        Neat.p_mutate_toggle_enable_prob = 0.05;
+        Neat.p_mutate_gene_reenable_prob = 0.05;
+
+        Neat.p_weight_mut_power = 1;
 
         Neat.p_trait_param_mut_prob = 0.5;
         Neat.p_trait_mutation_power = 1.0;
