@@ -6,3 +6,4 @@ iAntRunner/c:\\*
 *.iml
 build/*
 iAntRunner/target/*
+iAntTagData.txt

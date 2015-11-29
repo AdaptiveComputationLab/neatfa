@@ -22,7 +22,7 @@ public:
     static const int PHEROMONE_INPUT = 1;
     static const int INPUT_COUNT = BIAS_COUNT + COMPASS_COUNT + PROXIMITY_COUNT + HOLDING_FOOD_COUNT + NEAR_FOOD_COUNT + LIGHT_SENSOR_COUNT + PHEROMONE_INPUT;
     static const int WHEEL_OUTPUT = 2;
-    static const int PHEROMONE_OUTPUT = 1
+    static const int PHEROMONE_OUTPUT = 1;
     static const int OUTPUT_COUNT = WHEEL_OUTPUT + PHEROMONE_OUTPUT;
 
 private:

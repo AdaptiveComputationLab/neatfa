@@ -83,7 +83,7 @@ public class NEATExperiment {
         Neat.p_num_runs = 1;
         Neat.p_num_trait_params = 8;
 
-        Population population = new Population(Neat.p_pop_size, 12, 3, 5, true, 1);
+        Population population = new Population(Neat.p_pop_size, 16, 3, 5, true, 1);
 
 
         for (int e = 0; e < 100; e++) {
