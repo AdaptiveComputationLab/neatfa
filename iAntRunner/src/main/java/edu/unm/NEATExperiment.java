@@ -34,6 +34,16 @@ public class NEATExperiment {
         Neat.initbase();
 
         Neat.p_pop_size = populationSize;
+        Neat.p_survival_thresh = 0.1;
+
+        Neat.p_mutate_random_trait_prob = 0.1;
+        Neat.p_mutate_link_trait_prob = 0.1;
+        Neat.p_mutate_node_trait_prob = 0.1;
+        Neat.p_mutate_link_weights_prob = 0.1;
+        Neat.p_mutate_toggle_enable_prob = 0.05;
+        Neat.p_mutate_gene_reenable_prob = 0.05;
+
+        Neat.p_weight_mut_power = 1;
 
         Population population = new Population(Neat.p_pop_size, 11, 2, 5, true, 1);
         population.verify();

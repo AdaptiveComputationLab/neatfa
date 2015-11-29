@@ -5,7 +5,10 @@
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #include <argos3/plugins/robots/generic/control_interface/ci_positioning_sensor.h>
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
+#include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h>
+#include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
+#include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_light_sensor.h>
 #include <argos3/core/utility/math/rng.h>
 #include <source/iAnt_loop_functions.h>
 #include <source/nn/Perceptron.h>
@@ -52,6 +55,7 @@ private:
     CCI_PositioningSensor*            compass;
     CCI_DifferentialSteeringActuator* motorActuator;
     CCI_FootBotProximitySensor*       proximitySensor;
+    CCI_FootBotLightSensor*           lightSensor;
 
     /* iAnt controller parameters */
     Real             distanceTolerance;
@@ -72,6 +76,8 @@ private:
     void SetHoldingFood();
     bool IsNearFood();
     Real sumProximity(int sensorIndex[]);
+    int maxLightIndex(CCI_FootBotLightSensor::TReadings tReadings, int sensorIndex[],
+                      int numIndicies);
 
 };
 

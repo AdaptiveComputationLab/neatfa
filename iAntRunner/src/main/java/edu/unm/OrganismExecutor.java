@@ -32,7 +32,7 @@ public abstract class OrganismExecutor {
             if(organismWrapper != null){
                 final Organism organism = organismWrapper.getOrganism();
                 final String chromosome = organismWrapper.buildChromosone();
-                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(), runtime, distribution, entityCount).getBytes());
+                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), runtime, distribution, entityCount).getBytes());
 
                 String tag = startTime + "E" + epoch + "C" + organismWrapper.getId();
 
@@ -41,7 +41,7 @@ public abstract class OrganismExecutor {
                             @Override
                             public void onResult(Long result) {
                                 organism.setFitness(result);
-                                log.log("done: Fitness: " + result + " Chromosone: " + chromosome);
+                                log.log("done: Fitness: " + result + " Chromosome: " + chromosome);
                             }
                         }
                 ).run();

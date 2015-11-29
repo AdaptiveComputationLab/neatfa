@@ -13,6 +13,7 @@ iAnt_controller::iAnt_controller() :
     compass(NULL),
     motorActuator(NULL),
     proximitySensor(NULL),
+    lightSensor(NULL),
     distanceTolerance(0.0),
     searchStepSize(0.0),
     robotForwardSpeed(0.0),
@@ -37,6 +38,7 @@ void iAnt_controller::Init(TConfigurationNode& node) {
     motorActuator   = GetActuator<CCI_DSA>("differential_steering");
     compass         = GetSensor<CCI_PS>   ("positioning");
     proximitySensor = GetSensor<CCI_FBPS> ("footbot_proximity");
+    lightSensor  = GetSensor  <CCI_FootBotLightSensor>("footbot_light");
 
     CVector2 p(GetPosition());
     startPosition = CVector3(p.GetX(), p.GetY(), 0.0);
@@ -77,7 +79,24 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(8)->setValue(back);
     network->getInputs().at(9)->setValue(right);
 
+    const CCI_FootBotLightSensor::TReadings& tReadings = lightSensor->GetReadings();
+    int numIndices = 6;
 
+    int frontLight = maxLightIndex(tReadings, frontIndexes,numIndices);
+    int leftLight = maxLightIndex(tReadings, leftIndexes, numIndices);
+    int backLight = maxLightIndex(tReadings, backIndexes, numIndices);
+    int rightLight = maxLightIndex(tReadings, rightIndexes, numIndices);
+
+    network->getInputs().at(10)->setValue(tReadings[frontLight].Value);
+    network->getInputs().at(11)->setValue(tReadings[leftLight].Value);
+    network->getInputs().at(12)->setValue(tReadings[backLight].Value);
+    network->getInputs().at(13)->setValue(tReadings[rightLight].Value);
+
+//    network->getInputs().at(14)->setValue(tReadings[frontLight].Angle.GetValue());
+//    network->getInputs().at(15)->setValue(tReadings[leftLight].Angle.GetValue());
+//    network->getInputs().at(16)->setValue(tReadings[backLight].Angle.GetValue());
+//    network->getInputs().at(17)->setValue(tReadings[rightLight].Angle.GetValue());
+//
     /*for(int i = 0; i < proximitySensor->GetReadings().size(); i++){
         network->getInputs().at(i + 5)->setValue(proximitySensor->GetReadings().at(i).Value);
     }*/
@@ -101,12 +120,27 @@ void iAnt_controller::ControlStep() {
     SetHoldingFood();
 }
 
+int iAnt_controller::maxLightIndex(CCI_FootBotLightSensor::TReadings tReadings,
+                                   int sensorIndex[], int numIndices) {
+    Real maxVal = 0.0;
+
+    int maxIndex = sensorIndex[0];
+
+    for(int i = 0; i < numIndices; i++) {
+            if (maxVal > tReadings[sensorIndex[i]].Value){
+                maxVal= tReadings[sensorIndex[i]].Value;
+                maxIndex = i;
+            };
+    }
+    return maxIndex;
+}
+
 Real iAnt_controller::sumProximity(int sensorIndex[]) {
     Real sum = 0;
 
     for(int i = 0; i < 6; i++) {
-        if (sensorIndex[i] > sum) {
-            sum = sensorIndex[i];
+        if (proximitySensor->GetReadings().at(sensorIndex[i]).Value > sum) {
+            sum = proximitySensor->GetReadings().at(sensorIndex[i]).Value;
         }
     }
 
