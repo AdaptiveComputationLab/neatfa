@@ -14,18 +14,12 @@ public class NEATExperiment {
 
     private final Logger log;
     private final List<OrganismExecutor> executors;
-    private final int populationSize;
-    private final int runtime;
-    private final int distribution;
-    private final int entityCount;
+    private final ExperimentParameters parameters;
 
-    public NEATExperiment(List<OrganismExecutor> executors, Logger log, int populationSize, int runtime, int distribution, int entityCount) {
+    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParameters parameters) {
         this.executors = executors;
         this.log = log;
-        this.populationSize = populationSize;
-        this.runtime = runtime;
-        this.distribution = distribution;
-        this.entityCount = entityCount;
+        this.parameters = parameters;
     }
 
     public void run() throws Exception {
@@ -33,7 +27,7 @@ public class NEATExperiment {
 
         Neat.initbase();
 
-        Neat.p_pop_size = populationSize;
+        Neat.p_pop_size = parameters.populationSize();
         Neat.p_survival_thresh = 0.1;
 
         Neat.p_trait_param_mut_prob = 0.5;
@@ -78,7 +72,7 @@ public class NEATExperiment {
             long epochStart = System.currentTimeMillis();
             log.log("Epoch " + e);
 
-            final BlockingQueue<OrganismIdWrapper> queue = new ArrayBlockingQueue<OrganismIdWrapper>(populationSize);
+            final BlockingQueue<OrganismIdWrapper> queue = new ArrayBlockingQueue<OrganismIdWrapper>(parameters.populationSize());
 
             for (int i = 0; i < population.getOrganisms().size(); i++) {
                 queue.add(new OrganismIdWrapper((Organism) population.organisms.get(i), i));
@@ -91,7 +85,7 @@ public class NEATExperiment {
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        organismExecutor.listen(queue, epoch, runtime, distribution, entityCount);
+                        organismExecutor.listen(queue, epoch, parameters);
                     }
                 });
             }

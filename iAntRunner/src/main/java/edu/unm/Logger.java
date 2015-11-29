@@ -11,8 +11,9 @@ public class Logger {
 
     private final PrintStream out;
 
-    public Logger(long time) throws FileNotFoundException {
-        out = new PrintStream(new FileOutputStream("runlog" + time + ".txt"));
+    public Logger(ExperimentParameters parameters) throws FileNotFoundException {
+        out = new PrintStream(new FileOutputStream("runlog" + parameters.populationSize() + ".txt"));
+        log(parameters.toString());
     }
 
     public void log(String message){

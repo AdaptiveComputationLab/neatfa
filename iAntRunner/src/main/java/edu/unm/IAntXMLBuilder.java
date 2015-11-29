@@ -16,12 +16,12 @@ public class IAntXMLBuilder {
         iAntXml = IOUtils.toString(new FileInputStream("iAnt.xml"));
     }
 
-    public String buildXML(String chromosome, int seed, int runtime, int distribution, int entityCount) {
+    public String buildXML(String chromosome, int seed, ExperimentParameters parameters) {
         return iAntXml
                 .replace("${chromosome}", chromosome)
                 .replace("${seed}", Integer.toString(seed))
-                .replace("${distribution}", Integer.toString(distribution))
-                .replace("${runtime}", Integer.toString(runtime))
-                .replace("${entitycount}", Integer.toString(entityCount));
+                .replace("${distribution}", Integer.toString(parameters.distribution()))
+                .replace("${runtime}", Integer.toString(parameters.runtime()))
+                .replace("${entitycount}", Integer.toString(parameters.entityCount()));
     }
 }

@@ -27,7 +27,7 @@ public abstract class OrganismExecutor {
         this.log = log;
     }
 
-    public void listen(Queue<OrganismIdWrapper> queue, int epoch, int runtime, int distribution, int entityCount) {
+    public void listen(Queue<OrganismIdWrapper> queue, int epoch, ExperimentParameters parameters) {
         while(!queue.isEmpty()){
             final OrganismIdWrapper organismWrapper = queue.poll();
             if(organismWrapper != null){
@@ -36,7 +36,7 @@ public abstract class OrganismExecutor {
                 final String tag = startTime + "E" + epoch + "C" + organismWrapper.getId();
 
                 for(int i = 0; i < TRIALS; i++) {
-                    InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), runtime, distribution, entityCount).getBytes());
+                    InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), parameters).getBytes());
 
                     new ProcessExecutable(homeDirectory, getExecutable(tag), xml,
                             new ProcessExecutable.OnResultCallback() {
