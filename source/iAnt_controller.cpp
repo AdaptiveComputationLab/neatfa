@@ -79,7 +79,7 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(8)->setValue(back);
     network->getInputs().at(9)->setValue(right);
 
-    network->getInputs().at(10)->setValue(IsNearPherimone()? 1 : 0);
+    network->getInputs().at(10)->setValue(IsNearPheromone() ? 1 : 0);
 
     const CCI_FootBotLightSensor::TReadings& tReadings = lightSensor->GetReadings();
     int numIndices = 6;
@@ -111,7 +111,7 @@ void iAnt_controller::ControlStep() {
             m_fRightSpeed);
 
     if(network->getOutputs().at(2)->getCachedValue() > 0){
-        layPherimone();
+        layPheromone();
     }
 
     SetHoldingFood();
@@ -214,7 +214,7 @@ bool iAnt_controller::IsNearFood() {
     return false;
 }
 
-bool iAnt_controller::IsNearPherimone() {
+bool iAnt_controller::IsNearPheromone() {
     for(int i = 0; i < loopFunctions->Pheromones.size(); i++) {
         if (loopFunctions->Pheromones[i].IsActive() && ((GetPosition() - loopFunctions->Pheromones[i].GetLocation()).SquareLength() < loopFunctions->FoodRadiusSquared)) {
             return true;
@@ -223,13 +223,22 @@ bool iAnt_controller::IsNearPherimone() {
     return false;
 }
 
-void iAnt_controller::layPherimone() {
-    if (!IsNearPherimone()) {
-        Real timeInSeconds = (Real)(loopFunctions->SimTime / loopFunctions->TicksPerSecond);
+void iAnt_controller::layPheromone() {
+    Real timeInSeconds = (Real)(loopFunctions->SimTime / loopFunctions->TicksPerSecond);
+    if (!IsNearPheromone()) {
         iAnt_pheromone sharedPheromone(GetPosition(), timeInSeconds, loopFunctions->RateOfPheromoneDecay);
         loopFunctions->Pheromones.push_back(sharedPheromone);
     }
+    else{
+        for(int i = 0; i < loopFunctions->Pheromones.size(); i++) {
+            if (loopFunctions->Pheromones[i].IsActive() && ((GetPosition() - loopFunctions->Pheromones[i].GetLocation()).SquareLength() < loopFunctions->FoodRadiusSquared)) {
+                loopFunctions->Pheromones[i].Reset(timeInSeconds);
+            }
+        }
+    }
 }
+
+
 
 /*****
  * Return the robot's 2D position on the arena.

@@ -23,6 +23,7 @@ class iAnt_pheromone {
 		CVector2         GetLocation();
 		Real             GetWeight();
         bool             IsActive();
+	    void             Reset(Real time);
 
 	private:
 

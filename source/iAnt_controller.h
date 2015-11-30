@@ -75,12 +75,12 @@ private:
 
     void SetHoldingFood();
     bool IsNearFood();
-    bool IsNearPherimone();
+    bool IsNearPheromone();
     Real maxProximity(int *sensorIndex);
     int maxLightIndex(CCI_FootBotLightSensor::TReadings tReadings, int sensorIndex[],
                       int numIndicies);
 
-    void layPherimone();
+    void layPheromone();
 };
 
 #endif /* IANT_CONTROLLER_H_ */

@@ -34,6 +34,11 @@ void iAnt_pheromone::Update(Real time) {
     lastUpdated = time;
 }
 
+void iAnt_pheromone::Reset(Real time){
+	weight = 1.0;
+	lastUpdated = time;
+}
+
 /*****
  * Turns off a pheromone and makes it inactive.
  *****/
