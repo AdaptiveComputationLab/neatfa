@@ -12,12 +12,11 @@ public class Runner {
 
         int localRunnerCount = Runtime.getRuntime().availableProcessors();
         int remoteRunnerCount = 0;
-        List<OrganismExecutor> executors = new ArrayList<OrganismExecutor>();
 
         AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
 
         parametersBuilder
-                .populationSize(48)
+                .populationSize(100)
                 .runtime(10 * 60);
 
         int[] entityCounts = {10, 25, 60};
@@ -34,6 +33,8 @@ public class Runner {
                 ExperimentParameters parameters = parametersBuilder.build();
 
                 Logger log = new Logger(parameters);
+
+                List<OrganismExecutor> executors = new ArrayList<OrganismExecutor>();
 
                 //setup local runners
                 for (int i = 0; i < localRunnerCount; i++) {

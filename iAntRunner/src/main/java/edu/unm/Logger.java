@@ -12,7 +12,7 @@ public class Logger {
     private final PrintStream out;
 
     public Logger(ExperimentParameters parameters) throws FileNotFoundException {
-        out = new PrintStream(new FileOutputStream("runlog" + parameters.populationSize() + ".txt"));
+        out = new PrintStream(new FileOutputStream("runlog" + parameters.startTime() + ".txt"));
         log(parameters.toString());
     }
 

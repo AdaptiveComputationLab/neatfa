@@ -24,7 +24,7 @@ public class OrganismIdWrapper {
         return id;
     }
 
-    public String buildChromosone() {
+    public String buildChromosome() {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < organism.getGenome().getGenes().size(); i++) {

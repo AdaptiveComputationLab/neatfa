@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public abstract class OrganismExecutor {
 
-    private static final int TRIALS = 5;
+    private static final int TRIALS = 2;
     private static final Random RAND = new Random(System.currentTimeMillis());
     private final IAntXMLBuilder builder;
     private final String homeDirectory;
@@ -32,7 +32,7 @@ public abstract class OrganismExecutor {
             final OrganismIdWrapper organismWrapper = queue.poll();
             if(organismWrapper != null){
                 final Organism organism = organismWrapper.getOrganism();
-                final String chromosome = organismWrapper.buildChromosone();
+                final String chromosome = organismWrapper.buildChromosome();
                 final String tag = startTime + "E" + epoch + "C" + organismWrapper.getId();
 
                 for(int i = 0; i < TRIALS; i++) {
@@ -48,7 +48,7 @@ public abstract class OrganismExecutor {
                     ).run();
                 }
                 organism.setFitness(organism.getFitness() / TRIALS);
-                log.log("done: Fitness: " + organism.getFitness() + " Chromosone: " + tag + " " + chromosome);
+                log.log("done: Fitness: " + organism.getFitness() + " Chromosome: " + tag + " " + chromosome);
             }
         }
     }
