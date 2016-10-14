@@ -5,7 +5,11 @@ import edu.unm.neat.jneat.Organism;
 import edu.unm.neat.jneat.Population;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author John Ericksen
@@ -14,12 +18,14 @@ public class NEATExperiment {
 
     private final Logger log;
     private final List<OrganismExecutor> executors;
-    private final ExperimentParameters parameters;
+    private final ExperimentParamterFactory paramterFactory;
+    private final int populationSize;
 
-    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParameters parameters) {
+    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParamterFactory paramterFactory, int populationSize) {
         this.executors = executors;
         this.log = log;
-        this.parameters = parameters;
+        this.paramterFactory = paramterFactory;
+        this.populationSize = populationSize;
     }
 
     public void run() throws Exception {
@@ -27,7 +33,7 @@ public class NEATExperiment {
 
         Neat.initbase();
 
-        Neat.p_pop_size = parameters.populationSize();
+        Neat.p_pop_size = populationSize;
         Neat.p_survival_thresh = 0.1;
 
         Neat.p_trait_param_mut_prob = 0.5;
@@ -64,13 +70,15 @@ public class NEATExperiment {
         Neat.p_num_runs = 1;
         Neat.p_num_trait_params = 8;
 
-        Population population = new Population(Neat.p_pop_size, 16, 3, 5, true, 1);
+        Population population = new Population(Neat.p_pop_size, 17, 3, 5, true, 1);
 
 
         for (int e = 0; e < 100; e++) {
 
             long epochStart = System.currentTimeMillis();
             log.log("Epoch " + e);
+
+            final ExperimentParameters parameters = paramterFactory.build(e);
 
             final BlockingQueue<OrganismIdWrapper> queue = new ArrayBlockingQueue<OrganismIdWrapper>(parameters.populationSize());
 

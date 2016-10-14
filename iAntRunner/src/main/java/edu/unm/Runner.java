@@ -12,22 +12,25 @@ public class Runner {
 
         int localRunnerCount = Runtime.getRuntime().availableProcessors();
         int remoteRunnerCount = 0;
+        final int populationSize = 192;
+        final long startTime = System.currentTimeMillis();
+        final int runtime = 30 * 60;
 
         AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
 
         parametersBuilder
-                .populationSize(100)
-                .runtime(10 * 60);
+                .populationSize(populationSize)
+                .runtime(runtime);
 
-        int[] entityCounts = {10, 25, 60};
+        int[] entityCounts = {6};
         int[] distributions = {0, 1, 2};
 
-        for(int entityCount : entityCounts) {
-            for (int distribution : distributions) {
+        for(final int entityCount : entityCounts) {
+            //for (final int distribution : distributions) {
 
                 parametersBuilder
                         .entityCount(entityCount)
-                        .distribution(distribution)
+                        .distribution(0)
                         .startTime(System.currentTimeMillis());
 
                 ExperimentParameters parameters = parametersBuilder.build();
@@ -46,10 +49,23 @@ public class Runner {
                     executors.add(new RemoteOrganismExecutor("johncarl@maricopa.cs.unm.edu", "~/iAnt-ARGOS;", log, parameters.startTime()));
                 }
 
-                NEATExperiment experiment = new NEATExperiment(executors, log, parameters);
+                NEATExperiment experiment = new NEATExperiment(executors, log,
+                        new ExperimentParamterFactory() {
+                            @Override
+                            public ExperimentParameters build(int epoch) {
+                                return new AutoValue_ExperimentParameters.Builder()
+                                        .entityCount(entityCount)
+                                        .startTime(startTime)
+                                        .distribution((epoch / 10) % 3)
+                                        .populationSize(populationSize)
+                                        .runtime(runtime)
+                                        .build();
+                            }
+                        }
+                        , populationSize);
 
                 experiment.run();
-            }
+            //}
         }
 
     }
