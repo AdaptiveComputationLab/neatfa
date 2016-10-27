@@ -121,7 +121,7 @@
 
     <!-- MEDIA -->
     <media><led id="leds"/></media>
-    <!--
+    <!--REMOVE
     <visualization>
         <qt-opengl>
             <camera>
@@ -134,6 +134,6 @@
             <user_functions label="iAnt_qt_user_functions"/>
         </qt-opengl>
     </visualization>
-    -->
+    REMOVE-->
 
 </argos-configuration>

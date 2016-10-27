@@ -21,14 +21,14 @@ NeuralNetwork* NeuralNetFactory::build(Chromosome *chromosome,
     // Bias node
     ValueNeuron* biasNode = new ValueNeuron();
     biasNode->setValue(1);
-    neuronMap.insert(make_pair(0, biasNode));
+    neuronMap.insert(make_pair(1, biasNode));
 
     for(int i = 0; i < inputs; i++){
         ValueNeuron* inputNeuron = new ValueNeuron();
 
         inputNeurons.push_back(inputNeuron);
         neurons.push_back(inputNeuron);
-        neuronMap.insert(make_pair(i + 1, inputNeuron));
+        neuronMap.insert(make_pair(i + 2, inputNeuron));
     }
 
     for(int i = 0; i < outputs; i++) {
@@ -36,7 +36,7 @@ NeuralNetwork* NeuralNetFactory::build(Chromosome *chromosome,
 
         outputNeurons.push_back(outputPerceptron);
         neurons.push_back(outputPerceptron);
-        neuronMap.insert(make_pair(inputs + i + 1, outputPerceptron));
+        neuronMap.insert(make_pair(inputs + i + 2, outputPerceptron));
     }
 
     for(int i = 0; i < chromosome->getSize(); i++){

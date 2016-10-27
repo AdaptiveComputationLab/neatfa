@@ -31,6 +31,7 @@ public class ProcessExecutable implements Runnable {
 
             OutputStream stdIn = process.getOutputStream();
             InputStream stdOut = process.getInputStream();
+            InputStream stdErr = process.getErrorStream();
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdIn));
             IOUtils.copy(pipeIn, stdIn);

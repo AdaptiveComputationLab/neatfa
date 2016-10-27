@@ -17,10 +17,10 @@ public class Runner {
 
         parametersBuilder
                 .populationSize(100)
-                .runtime(10 * 60);
+                .runtime(30 * 60);
 
-        int[] entityCounts = {10, 25, 60};
-        int[] distributions = {0, 1, 2};
+        int[] entityCounts = {6};
+        int[] distributions = {1};
 
         for(int entityCount : entityCounts) {
             for (int distribution : distributions) {
@@ -38,7 +38,7 @@ public class Runner {
 
                 //setup local runners
                 for (int i = 0; i < localRunnerCount; i++) {
-                    executors.add(new LocalOrganismExecutor("/home/john/dev/iAnt-ARGoS/", log, parameters.startTime()));
+                    executors.add(new LocalOrganismExecutor("/nfs/adaptive/johncarl/iant/", log, parameters.startTime()));
                 }
 
                 //setup remote runners

@@ -270,12 +270,9 @@ public class Neat {
         //
         d_trait_param_mut_prob = "Prob. of mutating a single trait param";
         d_trait_mutation_power = "Power of mutation on a single trait param";
-        d_linktrait_mut_sig =
-                "Amount that mutation_num changes for a trait change inside a link";
-        d_nodetrait_mut_sig =
-                "Amount a mutation_num changes on a link connecting a node that changed its trait";
-        d_recur_prob =
-                "Prob. that a link mutation which doesn't have to be recurrent will be made recurrent";
+        d_linktrait_mut_sig = "Amount that mutation_num changes for a trait change inside a link";
+        d_nodetrait_mut_sig = "Amount a mutation_num changes on a link connecting a node that changed its trait";
+        d_recur_prob = "Prob. that a link mutation which doesn't have to be recurrent will be made recurrent";
         d_weight_mut_power = "The power of a link weight mutation";
         d_disjoint_coeff = "factor multiply for gene not equal";
         d_excess_coeff = "factor multiply for gene excedeed";
@@ -288,23 +285,19 @@ public class Neat {
         d_mutate_link_trait_prob = "Probability of mutate link trait";
         d_mutate_node_trait_prob = "Probability of mutate node trait";
         d_mutate_link_weights_prob = "Probability of mutate link weight";
-        d_mutate_toggle_enable_prob =
-                "Probability of mutate status ena->dis | dis-ena of gene";
+        d_mutate_toggle_enable_prob = "Probability of mutate status ena->dis | dis-ena of gene";
         d_mutate_gene_reenable_prob = "Probability of switch status to ena of gene";
         d_mutate_add_node_prob = "Probability of add a node to struct of genome";
         d_mutate_add_link_prob = "Probability of add a link to struct of genome";
         d_interspecies_mate_rate = "Probability of a mate being outside species";
         d_mate_multipoint_prob = "Probability of cross in a many point of two genome";
-        d_mate_multipoint_avg_prob =
-                "Probability of cross in a many point of two genome with media";
+        d_mate_multipoint_avg_prob = "Probability of cross in a many point of two genome with media";
         d_mate_singlepoint_prob = "Probability of cross in a single point of two genome";
         d_mate_only_prob = "Probability of mating without mutation";
-        d_recur_only_prob =
-                "Probability of forcing selection of ONLY links that are naturally recurrent";
+        d_recur_only_prob = "Probability of forcing selection of ONLY links that are naturally recurrent";
         d_pop_size = "Size of population";
         d_dropoff_age = "Age where Species starts to be penalized";
-        d_newlink_tries =
-                "Number of tries mutate_add_link will attempt to find an open link";
+        d_newlink_tries = "Number of tries mutate_add_link will attempt to find an open link";
         d_print_every = "Tells to print population to file every n generations";
         d_babies_stolen = "The number of babies to siphen off to the champions";
         d_num_runs = "The number of runs for an experiment";

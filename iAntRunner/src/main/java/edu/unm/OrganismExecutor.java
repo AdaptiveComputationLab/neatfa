@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public abstract class OrganismExecutor {
 
-    private static final int TRIALS = 2;
+    private static final int TRIALS = 10;
     private static final Random RAND = new Random(System.currentTimeMillis());
     private final IAntXMLBuilder builder;
     private final String homeDirectory;
