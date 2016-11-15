@@ -2,7 +2,14 @@ package edu.unm;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * @author John Ericksen
@@ -25,29 +32,41 @@ public class ProcessExecutable implements Runnable {
     @Override
     public void run() {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(executable);
-            processBuilder.directory(new File(directory));
-            Process process = processBuilder.start();
+            result = null;
+            for(int i = 0; i < 10 && result == null ; i++) {
+                result = runProcess();
 
-            OutputStream stdIn = process.getOutputStream();
-            InputStream stdOut = process.getInputStream();
-            InputStream stdErr = process.getErrorStream();
+                if(result == null) {
+                    System.out.println("Retrying " + i);
+                }
+            }
 
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdIn));
-            IOUtils.copy(pipeIn, stdIn);
-
-            writer.newLine();
-            writer.flush();
-            writer.close();
-
-            int code = process.waitFor();
-
-            result = processOutput(stdOut);
-
-            callback.onResult(result);
+            if(result != null) {
+                callback.onResult(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Long runProcess() throws Exception{
+        ProcessBuilder processBuilder = new ProcessBuilder(executable);
+        processBuilder.directory(new File(directory));
+        Process process = processBuilder.start();
+
+        OutputStream stdIn = process.getOutputStream();
+        InputStream stdOut = process.getInputStream();
+
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdIn));
+        IOUtils.copy(pipeIn, stdIn);
+
+        writer.newLine();
+        writer.flush();
+        writer.close();
+
+        int code = process.waitFor();
+
+        return processOutput(stdOut);
     }
 
     private Long processOutput(InputStream stdOut) throws IOException {

@@ -19,8 +19,8 @@ public class Runner {
                 .populationSize(100)
                 .runtime(30 * 60);
 
-        int[] entityCounts = {6};
-        int[] distributions = {1};
+        int[] entityCounts = {1, 4, 6, 8, 10, 15, 20, 25, 30};
+        int[] distributions = {0, 1, 2};
 
         for(int entityCount : entityCounts) {
             for (int distribution : distributions) {
