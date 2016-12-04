@@ -12,7 +12,7 @@ public class Runner {
 
         int localRunnerCount = Runtime.getRuntime().availableProcessors();
         int remoteRunnerCount = 0;
-        final int populationSize = 192;
+        final int populationSize = 100;
         final long startTime = System.currentTimeMillis();
         final int runtime = 30 * 60;
 
@@ -41,7 +41,7 @@ public class Runner {
 
                 //setup local runners
                 for (int i = 0; i < localRunnerCount; i++) {
-                    executors.add(new LocalOrganismExecutor("/home/john/dev/iAnt-ARGoS/", log, parameters.startTime()));
+                    executors.add(new LocalOrganismExecutor("/nfs/adaptive/johncarl/iant/", log, parameters.startTime()));
                 }
 
                 //setup remote runners
@@ -56,7 +56,7 @@ public class Runner {
                                 return new AutoValue_ExperimentParameters.Builder()
                                         .entityCount(entityCount)
                                         .startTime(startTime)
-                                        .distribution((epoch / 10) % 3)
+                                        .distribution((epoch / 300) % 3)
                                         .populationSize(populationSize)
                                         .runtime(runtime)
                                         .build();

@@ -73,7 +73,7 @@ public class NEATExperiment {
         Population population = new Population(Neat.p_pop_size, 17, 3, 5, true, 1);
 
 
-        for (int e = 0; e < 100; e++) {
+        for (int e = 0; e < 605; e++) {
 
             long epochStart = System.currentTimeMillis();
             log.log("Epoch " + e);
@@ -106,7 +106,7 @@ public class NEATExperiment {
 
             population.epoch(e);
 
-            log.log("Epoch " + e + " took " + (System.currentTimeMillis() - epochStart) + "ms");
+            log.log("Epoch " + e + " took " + (System.currentTimeMillis() - epochStart) + "ms with dist: " + parameters.distribution());
         }
 
         log.log("Finished: " + (System.currentTimeMillis() - start) + "ms");
