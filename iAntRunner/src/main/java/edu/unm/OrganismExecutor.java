@@ -21,9 +21,9 @@ public abstract class OrganismExecutor {
     private final long startTime;
     private final Map<String, Double> fitness_cache = new LRUCache<String, Double>(10000);
 
-    public OrganismExecutor(String homeDirectory, Logger log, long startTime) throws IOException {
+    public OrganismExecutor(String homeDirectory, Logger log, long startTime, String templateFile) throws IOException {
         this.startTime = startTime;
-        this.builder = new IAntXMLBuilder();
+        this.builder = new IAntXMLBuilder(templateFile);
         this.homeDirectory = homeDirectory;
         this.log = log;
     }

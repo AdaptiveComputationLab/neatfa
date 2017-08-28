@@ -15,11 +15,13 @@ public class NEATExperiment {
     private final Logger log;
     private final List<OrganismExecutor> executors;
     private final ExperimentParameters parameters;
+    private final boolean multiDistribution;
 
-    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParameters parameters) {
+    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParameters parameters, boolean multiDistribution) {
         this.executors = executors;
         this.log = log;
         this.parameters = parameters;
+        this.multiDistribution = multiDistribution;
     }
 
     public void run() throws Exception {

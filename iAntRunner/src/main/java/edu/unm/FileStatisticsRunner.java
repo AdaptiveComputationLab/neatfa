@@ -83,7 +83,7 @@ public class FileStatisticsRunner {
 
     private static void runStats(String file, String line, int entityCount, String chromosome) throws Exception {
         System.out.println(chromosome);
-        IAntXMLBuilder builder = new IAntXMLBuilder();
+        IAntXMLBuilder builder = new IAntXMLBuilder("iAnt.xml");
 
         AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
 

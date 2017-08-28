@@ -29,7 +29,7 @@ public class StatisticsRunner {
     }
 
     public void run() throws Exception  {
-        IAntXMLBuilder builder = new IAntXMLBuilder();
+        IAntXMLBuilder builder = new IAntXMLBuilder("iAnt.xml");
 
         AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
 

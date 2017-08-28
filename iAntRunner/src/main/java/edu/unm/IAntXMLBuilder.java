@@ -12,8 +12,8 @@ public class IAntXMLBuilder {
 
     private final String iAntXml;
 
-    public IAntXMLBuilder() throws IOException {
-        iAntXml = IOUtils.toString(new FileInputStream("iAnt.xml"));
+    public IAntXMLBuilder(String templateFile) throws IOException {
+        iAntXml = IOUtils.toString(new FileInputStream(templateFile));
     }
 
     public String buildXML(String chromosome, int seed, ExperimentParameters parameters) {

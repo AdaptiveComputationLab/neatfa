@@ -52,9 +52,6 @@ public class ChromosomeGraphViz {
 
         output("}");
 
-        //}
-
-
     }
 
     public static void output(String... parts){
