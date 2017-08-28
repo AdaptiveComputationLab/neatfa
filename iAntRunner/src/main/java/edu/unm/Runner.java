@@ -10,7 +10,7 @@ public class Runner {
 
     public static void main(String[] args) throws Exception {
 
-        int localRunnerCount = Runtime.getRuntime().availableProcessors();
+        int localRunnerCount = 2 * Runtime.getRuntime().availableProcessors();
         int remoteRunnerCount = 0;
 
         AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
@@ -19,7 +19,7 @@ public class Runner {
                 .populationSize(100)
                 .runtime(30 * 60);
 
-        int[] entityCounts = {1, 4, 6, 8, 10, 15, 20, 25, 30};
+        int[] entityCounts = {6};
         int[] distributions = {0, 1, 2};
 
         for(int entityCount : entityCounts) {
@@ -32,7 +32,7 @@ public class Runner {
 
                 ExperimentParameters parameters = parametersBuilder.build();
 
-                Logger log = new Logger(parameters);
+            Logger log = new Logger(parameters);
 
                 List<OrganismExecutor> executors = new ArrayList<OrganismExecutor>();
 

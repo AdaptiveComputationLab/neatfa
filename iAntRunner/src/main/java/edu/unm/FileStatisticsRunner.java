@@ -7,8 +7,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -18,29 +22,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class FileStatisticsRunner {
 
-    private static final Random RAND = new Random();
+    private static final Random RAND = new Random(System.currentTimeMillis());
     private static final String HOME_DIRECTORY = "/home/john/dev/iAnt-ARGoS/";
     private static final String EXECUTABLE = "./build/source/iant_main";
 
+    //"runlog1495307324523.txt"
+
     private static final String[] FILES = {
-            "runlog1480280318419.txt",
-            "runlog1480283190725.txt",
-            "runlog1480286149378.txt",
-            "runlog1480288601422.txt",
-            "runlog1480297240616.txt",
-            "runlog1480305792928.txt",
             "runlog1480314453509.txt",
             "runlog1480325980460.txt",
             "runlog1480340772516.txt",
-            "runlog1480352697854.txt",
-            "runlog1480365735799.txt",
-            "runlog1480379220281.txt",
-            "runlog1480396051049.txt",
-            "runlog1480421973717.txt",
-            "runlog1480445126285.txt",
-            "runlog1480462416902.txt",
-            "runlog1480492180722.txt",
-            "runlog1480517527448.txt"
+            "runlog1495307324523.txt"
     };
 
     private static final int[] COUNT = {1, 4, 6, 8, 10, 15, 20, 25, 30};
@@ -50,12 +42,47 @@ public class FileStatisticsRunner {
         for(int i = 0; i < FILES.length; i++) {
             String file = FILES[i];
             int count = COUNT[i/3];
-            //runStats(file, getFirstLine(file), count, getMaxChromosome(file));
-            System.out.println("For: " + file + " max: " + getMaxChromosome(file));
+            runStats(file, getFirstLine(file), 6, getMaxChromosome(file));
+            //System.out.println("For: " + file + " max: " + getMaxChromosome(file));
         }
     }
 
+    /*
+    public static void main(String[] args) throws Exception {
+
+        for(int i = 0; i < FILES.length; i++) {
+            //for(int j = 0; j < COUNT.length; j++) {
+                String file = FILES[i];
+                //runStats(file, getFirstLine(file), COUNT[j], getMaxChromosome(file));
+                //System.out.println("For: " + file + " max: " + getMaxChromosome(file));
+                //System.out.println("max: " + getMaxChromosome(file));
+                Set<Integer> nodes = new HashSet<Integer>();
+                int deacivatedNodes = 0;
+                int edges = 0;
+
+                String maxChromosome = getMaxChromosome(file);
+                for(String chromosome : maxChromosome.substring(maxChromosome.indexOf(";") + 1).split(";")) {
+                    String[] parts = chromosome.split(",");
+
+                    if(parts[1].equals("1")) {
+                        nodes.add(Integer.parseInt(parts[2]));
+                        nodes.add(Integer.parseInt(parts[3]));
+                        edges++;
+                    }
+                    else {
+                        deacivatedNodes++;
+                    }
+                }
+                System.out.println("Nodes: " + nodes.size());
+                System.out.println("Acive edges: " + edges);
+            System.out.println("deacivatedNodes edges: " + deacivatedNodes);
+            //}
+        }
+    }
+     */
+
     private static void runStats(String file, String line, int entityCount, String chromosome) throws Exception {
+        System.out.println(chromosome);
         IAntXMLBuilder builder = new IAntXMLBuilder();
 
         AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
@@ -68,9 +95,12 @@ public class FileStatisticsRunner {
         long startTime = System.currentTimeMillis();
         for(int d = 0; d < 3; d++) {
 
+
             parametersBuilder
                     .distribution(d)
                     .startTime(System.currentTimeMillis());
+
+            System.out.println(parametersBuilder.build());
 
 
             final List<Long> fitness = new ArrayList<Long>();
@@ -97,8 +127,8 @@ public class FileStatisticsRunner {
             executor.shutdown();
 
             while (!executor.awaitTermination(1, TimeUnit.SECONDS)) {}
-            System.out.println("For: " + file + " : " + line + " Count: " + entityCount + " Dist: " + d + " Stats: " + getStatistics(fitness));
-
+            //System.out.println("For: " + file + " : " + line + " Count: " + entityCount + " Dist: " + d + " Stats: " + getStatistics(fitness));
+            System.out.println("Entities: " + entityCount + " Dist: " + d + " : " + getStatistics(fitness));
         }
     }
 
@@ -109,7 +139,7 @@ public class FileStatisticsRunner {
             sum += f;
         }
 
-        double average = sum / fitness.size();
+        double average = (sum * 1.0) / fitness.size();
 
         double stddevsum = 0;
         for(Long f : fitness) {
@@ -122,27 +152,45 @@ public class FileStatisticsRunner {
     }
 
     private static String getMaxChromosome(String file) throws IOException {
-        File logFile = new File(new File("/home/john/experiemnt_data"), file);
+        File logFile = new File(new File("/home/john/neatfa/data"), file);
 
         BufferedReader reader = new BufferedReader(new FileReader(logFile));
+        List<FitnessChromosome> chromosomes = new ArrayList<FitnessChromosome>();
 
         // Find max
         double max = Double.NEGATIVE_INFINITY;
         String maxChromosome = "none";
         for(String line; (line = reader.readLine()) != null; ) {
             if(line.startsWith("done: Fitness: ")) {
-                double fitness = Double.parseDouble(line.split(" ")[2]);
+                /*double fitness = Double.parseDouble(line.split(" ")[2]);
                 if(fitness > max) {
                     max = fitness;
-                    maxChromosome = line.split(" ")[4];
-                }
+                    maxChromosome = line.split(" ")[5];
+                }*/
+                FitnessChromosome fc = new FitnessChromosome();
+                fc.fitness = Double.parseDouble(line.split(" ")[2]);
+                fc.chromosome = line.split(" ")[5];
+                chromosomes.add(fc);
             }
         }
-        return maxChromosome;
+
+        Collections.sort(chromosomes, new Comparator<FitnessChromosome>() {
+            @Override
+            public int compare(FitnessChromosome o1, FitnessChromosome o2) {
+                return Double.compare(o2.fitness, o1.fitness);
+            }
+        });
+
+        return chromosomes.get(0).chromosome;
+    }
+
+    private static class FitnessChromosome {
+        double fitness;
+        String chromosome;
     }
 
     private static String getFirstLine(String file) throws IOException {
-        File logFile = new File(new File("/home/john/experiemnt_data"), file);
+        File logFile = new File(new File("/home/john/neatfa/data"), file);
 
         BufferedReader reader = new BufferedReader(new FileReader(logFile));
         return reader.readLine();
