@@ -15,13 +15,15 @@ public class NEATExperiment {
     private final Logger log;
     private final List<OrganismExecutor> executors;
     private final ExperimentParameters parameters;
-    private final boolean multiDistribution;
+    private final int epochs;
+    private final List<Integer> distributions;
 
-    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParameters parameters, boolean multiDistribution) {
+    public NEATExperiment(List<OrganismExecutor> executors, Logger log, ExperimentParameters parameters, int epochs, List<Integer> distributions) {
         this.executors = executors;
         this.log = log;
         this.parameters = parameters;
-        this.multiDistribution = multiDistribution;
+        this.epochs = epochs;
+        this.distributions = distributions;
     }
 
     public void run() throws Exception {
@@ -69,7 +71,7 @@ public class NEATExperiment {
         Population population = new Population(Neat.p_pop_size, 16, 3, 5, true, 1);
 
 
-        for (int e = 0; e < 100; e++) {
+        for (int e = 0; e < epochs; e++) {
 
             long epochStart = System.currentTimeMillis();
             log.log("Epoch " + e);
@@ -83,13 +85,16 @@ public class NEATExperiment {
             ExecutorService executor = Executors.newFixedThreadPool(executors.size());
 
             final int epoch = e;
-            for (final OrganismExecutor organismExecutor : executors) {
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        organismExecutor.listen(queue, epoch, parameters);
-                    }
-                });
+            for(Integer d : distributions) {
+                final int distribution = d;
+                for (final OrganismExecutor organismExecutor : executors) {
+                    executor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            organismExecutor.listen(queue, epoch, parameters, distribution);
+                        }
+                    });
+                }
             }
 
             executor.shutdown();

@@ -14,8 +14,6 @@ public abstract class ExperimentParameters {
 
     public abstract int entityCount();
 
-    public abstract int distribution();
-
     public abstract long startTime();
 
     @AutoValue.Builder
@@ -25,8 +23,6 @@ public abstract class ExperimentParameters {
         public abstract Builder runtime(int runtime);
 
         public abstract Builder entityCount(int count);
-
-        public abstract Builder distribution(int distribution);
 
         public abstract Builder startTime(long time);
 

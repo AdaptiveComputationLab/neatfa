@@ -6,6 +6,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public class Runner {
         options.addOption("a", "argosDirectory", true, "Root directory of argos.");
         options.addOption("h", "help", false, "Prints this message.");
         options.addOption("t", "template", true, "iAnt.xml template file to use.");
+        options.addOption("e", "epochs", true, "Number of epochs to run the experiment.");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse( options, args);
@@ -40,6 +42,7 @@ public class Runner {
             int distribution = parseIntegerOption(cmd, "r", 0);
             boolean multiDistribution = cmd.hasOption("m");
             int entityCount = parseIntegerOption(cmd, "r", 6);
+            int epochs = parseIntegerOption(cmd, "e", 100);
             String argosDirectory = "argos";
             if (cmd.hasOption("a")) {
                 argosDirectory = cmd.getOptionValue("a");
@@ -47,6 +50,15 @@ public class Runner {
             String templateFile = "iAnt.xml";
             if(cmd.hasOption("t")) {
                 templateFile = cmd.getOptionValue("t");
+            }
+
+            List<Integer> distributions = new ArrayList<Integer>();
+
+            if(multiDistribution) {
+                distributions.addAll(Arrays.asList(0, 1, 2));
+            }
+            else {
+                distributions.add(distribution);
             }
 
             int localRunnerCount = Runtime.getRuntime().availableProcessors();
@@ -59,7 +71,6 @@ public class Runner {
 
             parametersBuilder
                     .entityCount(entityCount)
-                    .distribution(distribution)
                     .startTime(System.currentTimeMillis());
 
             ExperimentParameters parameters = parametersBuilder.build();
@@ -73,7 +84,7 @@ public class Runner {
                 executors.add(new LocalOrganismExecutor(argosDirectory, log, parameters.startTime(), templateFile));
             }
 
-            NEATExperiment experiment = new NEATExperiment(executors, log, parameters, multiDistribution);
+            NEATExperiment experiment = new NEATExperiment(executors, log, parameters, epochs, distributions);
 
             experiment.run();
         }

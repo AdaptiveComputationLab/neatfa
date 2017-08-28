@@ -28,7 +28,7 @@ public abstract class OrganismExecutor {
         this.log = log;
     }
 
-    public void listen(Queue<OrganismIdWrapper> queue, int epoch, ExperimentParameters parameters) {
+    public void listen(Queue<OrganismIdWrapper> queue, int epoch, ExperimentParameters parameters, int distribution) {
         while(!queue.isEmpty()){
             final OrganismIdWrapper organismWrapper = queue.poll();
             if(organismWrapper != null) {
@@ -40,7 +40,7 @@ public abstract class OrganismExecutor {
                     organism.setFitness(organism.getFitness() + fitness_cache.get(chromosome));
                 } else {
                     for (int i = 0; i < SEEDS.length; i++) {
-                        InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, SEEDS[i], parameters).getBytes());
+                        InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, SEEDS[i], parameters, distribution).getBytes());
 
                         new ProcessExecutable(homeDirectory, getExecutable(tag), xml,
                                 new ProcessExecutable.OnResultCallback() {

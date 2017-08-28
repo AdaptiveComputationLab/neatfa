@@ -45,7 +45,6 @@ public class StatisticsRunner {
             for(int d = 0; d < 3; d++) {
 
                 parametersBuilder
-                        .distribution(d)
                         .startTime(System.currentTimeMillis());
 
 
@@ -54,7 +53,7 @@ public class StatisticsRunner {
 
                 for(int j = 0; j < 40; j++) {
 
-                    InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), parametersBuilder.build()).getBytes());
+                    InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), parametersBuilder.build(), d).getBytes());
 
                     final String tag = startTime + "F" + i + "D" + d + "C" + j;
 

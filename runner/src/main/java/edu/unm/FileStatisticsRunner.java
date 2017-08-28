@@ -97,7 +97,6 @@ public class FileStatisticsRunner {
 
 
             parametersBuilder
-                    .distribution(d)
                     .startTime(System.currentTimeMillis());
 
             System.out.println(parametersBuilder.build());
@@ -108,7 +107,7 @@ public class FileStatisticsRunner {
 
             for(int j = 0; j < 48; j++) {
 
-                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), parametersBuilder.build()).getBytes());
+                InputStream xml = new ByteArrayInputStream(builder.buildXML(chromosome, RAND.nextInt(65536), parametersBuilder.build(), d).getBytes());
 
                 final String tag = startTime + "F" + file + "D" + d + "C" + j;
 
