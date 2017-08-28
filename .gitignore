@@ -2,8 +2,8 @@
 .idea
 argos/experiments/*.xml
 runlog*.txt
-iAntRunner/c:\\*
+runner/c:\\*
 *.iml
 argos/build/*
-iAntRunner/target/*
+runner/target/*
 iAntTagData.txt
