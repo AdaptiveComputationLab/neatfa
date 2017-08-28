@@ -1,9 +1,9 @@
 .DS_Store
 .idea
-experiments/*.xml
+argos/experiments/*.xml
 runlog*.txt
 iAntRunner/c:\\*
 *.iml
-build/*
+argos/build/*
 iAntRunner/target/*
 iAntTagData.txt
