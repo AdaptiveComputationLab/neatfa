@@ -1,16 +1,16 @@
-== NeatFA
+= NeatFA
 
 NeatFA is an application of Neuro Evolution of Augmented Topologies to the foraging problem in swarm robotics.
-This project includes a forked version of (http://www.argos-sim.info/)[ARGoS] that evalutes an input neural network and returns the fitness.
-Also this project includes a controlling application that evolves the neural network using (http://nn.cs.utexas.edu/?jneat)[JNeat] and evalutes the population with multiple ARGoS simulations in parallel. 
+This project includes a forked version of http://www.argos-sim.info/[ARGoS] that evalutes an input neural network and returns the fitness.
+Also this project includes a controlling application that evolves the neural network using http://nn.cs.utexas.edu/?jneat[JNeat] and evalutes the population with multiple ARGoS simulations in parallel. 
 
-=== Directions
+== Directions
 
 This project has two parts.
 First is the application to evolve a neural network via NEAT to forage in ARGoS.
 Second, this project offers a handful of tools to evaluate the analyze the generated networks.
 
-==== Build ARGoS
+=== Build ARGoS
 
 To start, you need to build ARGoS.
 This may require the installation of a handful of dependencies to be installed.
@@ -80,7 +80,7 @@ Linking CXX executable iant_main
 
 ```
 
-==== Build Runner
+=== Build Runner
 
 Next you need to build the runner.
 cd inso the runner directory and build the java project with maven:
@@ -158,7 +158,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 ```
 This generates the `iAntRunner-1.0.0-SNAPSHOT-jar-with-dependencies.jar` artifact within the `runner/target` directory.
 
-==== Execution
+=== Execution
 
 The `iAntRunner-1.0.0-SNAPSHOT-jar-with-dependencies.jar` includes an experiment runner and associated data analysis tools.  The runner is executed by running the `edu.unm.Runner` class.  `Runner` has the following parameters:
 ```
