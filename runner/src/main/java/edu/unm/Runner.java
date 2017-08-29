@@ -33,7 +33,7 @@ public class Runner {
 
         if(cmd.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp( "neatfa", options );
+            formatter.printHelp( Runner.class.getCanonicalName(), options );
         }
         else {
 
