@@ -53,9 +53,10 @@ public class MaxChromosome {
         // Find max
         for(String line; (line = reader.readLine()) != null; ) {
             if(line.startsWith("done: Fitness: ")) {
+                String[] split = line.split(" ");
                 FitnessChromosome fc = new FitnessChromosome();
-                fc.fitness = Double.parseDouble(line.split(" ")[2]);
-                fc.chromosome = line.split(" ")[5];
+                fc.fitness = Double.parseDouble(split[2]);
+                fc.chromosome = split[5];
                 chromosomes.add(fc);
             }
         }
