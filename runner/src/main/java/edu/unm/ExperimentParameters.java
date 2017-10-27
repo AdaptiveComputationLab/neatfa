@@ -16,6 +16,10 @@ public abstract class ExperimentParameters {
 
     public abstract long startTime();
 
+    public static Builder builder() {
+        return new AutoValue_ExperimentParameters.Builder();
+    }
+
     @AutoValue.Builder
     abstract static class Builder {
         public abstract Builder populationSize(int size);

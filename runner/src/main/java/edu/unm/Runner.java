@@ -63,7 +63,7 @@ public class Runner {
 
             int localRunnerCount = Runtime.getRuntime().availableProcessors();
 
-            AutoValue_ExperimentParameters.Builder parametersBuilder = new AutoValue_ExperimentParameters.Builder();
+            ExperimentParameters.Builder parametersBuilder = ExperimentParameters.builder();
 
             parametersBuilder
                     .populationSize(populationSize)
