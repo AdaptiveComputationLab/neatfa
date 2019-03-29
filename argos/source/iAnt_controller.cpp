@@ -58,14 +58,18 @@ void iAnt_controller::ControlStep() {
     }
 
     //update inputs
+    // Compass
     network->getInputs().at(0)->setValue(compass->GetReading().Orientation.GetW());
     network->getInputs().at(1)->setValue(compass->GetReading().Orientation.GetX());
     network->getInputs().at(2)->setValue(compass->GetReading().Orientation.GetY());
     network->getInputs().at(3)->setValue(compass->GetReading().Orientation.GetZ());
 
+    // Holding food
     network->getInputs().at(4)->setValue(isHoldingFood? 1 : 0);
+    // Near food
     network->getInputs().at(5)->setValue(IsNearFood()? 1 : 0);
 
+    // Robot proximity
     int frontIndexes[6] = {21, 22, 23, 0, 1, 2};
     Real front = maxProximity(frontIndexes);
     int leftIndexes[6] = {3, 4, 5, 6, 7, 8};
@@ -80,11 +84,13 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(8)->setValue(back);
     network->getInputs().at(9)->setValue(right);
 
+    // Near pheromone
     network->getInputs().at(10)->setValue(IsNearPheromone() ? 1 : 0);
 
     const CCI_FootBotLightSensor::TReadings& tReadings = lightSensor->GetReadings();
     int numIndices = 6;
 
+    // Nest light sight
     int frontLight = maxLightIndex(tReadings, frontIndexes,numIndices);
     int leftLight = maxLightIndex(tReadings, leftIndexes, numIndices);
     int backLight = maxLightIndex(tReadings, backIndexes, numIndices);
