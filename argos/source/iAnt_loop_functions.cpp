@@ -36,7 +36,13 @@ iAnt_loop_functions::iAnt_loop_functions() :
     FoodRadius(0.0),
     FoodRadiusSquared(0.0),
     ForageRangeX(-1.0, 1.0),
-    ForageRangeY(-1.0, 1.0)
+    ForageRangeY(-1.0, 1.0),
+    disableCompass(0),
+    disableHoldingFood(0),
+    disableNearFood(0),
+    disableRobotProxmity(0),
+    disablePheromone(0),
+    disableNestLight(0)
 {}
 
 /*****
@@ -89,6 +95,12 @@ void iAnt_loop_functions::Init(TConfigurationNode& node) {
     string chromosomeString;
 
     GetNodeAttribute(simNode, "Chromosome",                         chromosomeString);
+    GetNodeAttributeOrDefault(simNode, "DisableCompass",            disableCompass, (size_t)0);
+    GetNodeAttributeOrDefault(simNode, "DisableHoldingFood",        disableHoldingFood, (size_t)0);
+    GetNodeAttributeOrDefault(simNode, "DisableNearFood",           disableNearFood, (size_t)0);
+    GetNodeAttributeOrDefault(simNode, "DisableRobotProxmity",      disableRobotProxmity, (size_t)0);
+    GetNodeAttributeOrDefault(simNode, "DisablePheromone",          disablePheromone, (size_t)0);
+    GetNodeAttributeOrDefault(simNode, "DisableNestLight",          disableNestLight, (size_t)0);
 
     loadChromosome(chromosomeString);
 

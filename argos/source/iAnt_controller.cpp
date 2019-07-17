@@ -59,25 +59,26 @@ void iAnt_controller::ControlStep() {
 
     //update inputs
     // Compass
-    network->getInputs().at(0)->setValue(compass->GetReading().Orientation.GetW());
-    network->getInputs().at(1)->setValue(compass->GetReading().Orientation.GetX());
-    network->getInputs().at(2)->setValue(compass->GetReading().Orientation.GetY());
-    network->getInputs().at(3)->setValue(compass->GetReading().Orientation.GetZ());
+    network->getInputs().at(0)->setValue(loopFunctions->disableCompass ? 0 : compass->GetReading().Orientation.GetW());
+    network->getInputs().at(1)->setValue(loopFunctions->disableCompass ? 0 : compass->GetReading().Orientation.GetX());
+    network->getInputs().at(2)->setValue(loopFunctions->disableCompass ? 0 : compass->GetReading().Orientation.GetY());
+    network->getInputs().at(3)->setValue(loopFunctions->disableCompass ? 0 : compass->GetReading().Orientation.GetZ());
+
 
     // Holding food
-    network->getInputs().at(4)->setValue(isHoldingFood? 1 : 0);
+    network->getInputs().at(4)->setValue(isHoldingFood && !loopFunctions->disableHoldingFood? 1 : 0);
     // Near food
-    network->getInputs().at(5)->setValue(IsNearFood()? 1 : 0);
+    network->getInputs().at(5)->setValue(IsNearFood() && !loopFunctions->disableNearFood? 1 : 0);
 
     // Robot proximity
     int frontIndexes[6] = {21, 22, 23, 0, 1, 2};
-    Real front = maxProximity(frontIndexes);
+    Real front = loopFunctions->disableRobotProxmity ? 0 : maxProximity(frontIndexes);
     int leftIndexes[6] = {3, 4, 5, 6, 7, 8};
-    Real left = maxProximity(leftIndexes);
+    Real left = loopFunctions->disableRobotProxmity ? 0 : maxProximity(leftIndexes);
     int backIndexes[6] = {9, 10, 11, 12, 13, 14};
-    Real back = maxProximity(backIndexes);
+    Real back = loopFunctions->disableRobotProxmity ? 0 : maxProximity(backIndexes);
     int rightIndexes[6] = {15, 16, 17, 18, 19, 20};
-    Real right = maxProximity(rightIndexes);
+    Real right = loopFunctions->disableRobotProxmity ? 0 : maxProximity(rightIndexes);
 
     network->getInputs().at(6)->setValue(front);
     network->getInputs().at(7)->setValue(left);
@@ -85,7 +86,7 @@ void iAnt_controller::ControlStep() {
     network->getInputs().at(9)->setValue(right);
 
     // Near pheromone
-    network->getInputs().at(10)->setValue(IsNearPheromone() ? 1 : 0);
+    network->getInputs().at(10)->setValue(IsNearPheromone() && !loopFunctions->disablePheromone ? 1 : 0);
 
     const CCI_FootBotLightSensor::TReadings& tReadings = lightSensor->GetReadings();
     int numIndices = 6;
@@ -96,10 +97,10 @@ void iAnt_controller::ControlStep() {
     int backLight = maxLightIndex(tReadings, backIndexes, numIndices);
     int rightLight = maxLightIndex(tReadings, rightIndexes, numIndices);
 
-    network->getInputs().at(11)->setValue(tReadings[frontLight].Value);
-    network->getInputs().at(12)->setValue(tReadings[leftLight].Value);
-    network->getInputs().at(13)->setValue(tReadings[backLight].Value);
-    network->getInputs().at(14)->setValue(tReadings[rightLight].Value);
+    network->getInputs().at(11)->setValue(loopFunctions->disableNestLight ? 0 : tReadings[frontLight].Value);
+    network->getInputs().at(12)->setValue(loopFunctions->disableNestLight ? 0 : tReadings[leftLight].Value);
+    network->getInputs().at(13)->setValue(loopFunctions->disableNestLight ? 0 : tReadings[backLight].Value);
+    network->getInputs().at(14)->setValue(loopFunctions->disableNestLight ? 0 : tReadings[rightLight].Value);
 
     network->update();
 

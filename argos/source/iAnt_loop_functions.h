@@ -49,7 +49,7 @@ class iAnt_loop_functions : public CLoopFunctions {
 
 	protected:
 
-    int foodReturned;
+    int foodReturned = 0;
 
         /* iAnt simulation data */
         size_t SimTime;
@@ -104,6 +104,12 @@ class iAnt_loop_functions : public CLoopFunctions {
     private:
 
         Chromosome* chromosome;
+				size_t disableCompass;
+				size_t disableHoldingFood;
+				size_t disableNearFood;
+				size_t disableRobotProxmity;
+				size_t disablePheromone;
+				size_t disableNestLight;
         CRandom::CRNG* RNG;
 
         /* private helper functions */
@@ -118,6 +124,7 @@ class iAnt_loop_functions : public CLoopFunctions {
 
     void loadChromosome(string basic_string);
     void Tokenize(const string& str, vector<string>& tokens, const string& delimiters);
+
 };
 
 #endif /* IANT_LOOP_FUNCTIONS_H_ */
