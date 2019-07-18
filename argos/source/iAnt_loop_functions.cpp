@@ -192,6 +192,8 @@ void iAnt_loop_functions::PostExperiment() {
         dataOutput.close();
     }
 
+    cout << "Fitness:" << getFitness() << endl;
+
     SimCounter++;
 }
 
