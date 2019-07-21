@@ -20,7 +20,8 @@ iAnt_controller::iAnt_controller() :
     robotRotationSpeed(0.0),
     RNG(NULL),
     loopFunctions(NULL),
-    isHoldingFood(false)
+    isHoldingFood(false),
+    networkInitalized(false)
 {}
 
 /*****
